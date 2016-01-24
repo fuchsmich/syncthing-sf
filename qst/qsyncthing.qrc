@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/syncthingBlueAnim.gif</file>
+        <file>images/syncthingBlackAnim.gif</file>
+        <file>images/syncthingBlue.png</file>
+        <file>images/syncthingGrey.png</file>
+        <file>images/Syncthing.icns</file>
+        <file>images/syncthingBlack.png</file>
+    </qresource>
+</RCC>
