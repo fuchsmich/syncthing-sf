@@ -62,18 +62,18 @@ ApplicationWindow
         Component.onCompleted: console.log(state)
 
     }
-    DBusInterface {
-        id: connmans_wifi
+//    DBusInterface {
+//        id: connmans_wifi
 
-        service: "net.connman"
-        path: "/net/connman/technology/wifi"
-        iface: "net.connman.Technology"
+//        service: "net.connman"
+//        path: "/net/connman/technology/wifi"
+//        iface: "net.connman.Technology"
 
-        property var props: getProperty("GetProperties")
+//        property var props: getProperty("GetProperties")
 
-        Component.onCompleted: console.log(props)
+//        Component.onCompleted: console.log(props)
 
-    }
+//    }
 
     //    Item {
     //        id:sc
