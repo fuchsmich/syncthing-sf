@@ -16,9 +16,9 @@
 // License along with this library.
 ******************************************************************************/
 
-#ifdef QT_QML_DEBUG
+//#ifdef QT_QML_DEBUG
 #include <QtQuick>
-#endif
+//#endif
 
 #include <sailfishapp.h>
 

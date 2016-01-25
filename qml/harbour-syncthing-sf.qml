@@ -59,6 +59,20 @@ ApplicationWindow
             , ["replace"])
             syncthing_service.state = syncthing_service.getProperty("ActiveState")
         }
+        Component.onCompleted: console.log(state)
+
+    }
+    DBusInterface {
+        id: connmans_wifi
+
+        service: "net.connman"
+        path: "/net/connman/technology/wifi"
+        iface: "net.connman.Technology"
+
+        property var props: getProperty("GetProperties")
+
+        Component.onCompleted: console.log(props)
+
     }
 
     //    Item {
@@ -82,19 +96,11 @@ ApplicationWindow
     //        }
     //    }
 
-    function toggle() {
-        syncthing_service.call(
-                    syncthing_service.state != "active" ? "Start" : "Stop"
-                    , ["replace"])
-        syncthing_service.state = syncthing_service.getProperty("ActiveState")
-    }
-
-
     id: app
     property string sTstatus: sc.status
 
     initialPage: Component { FirstPage { id: fp } }
-    //    cover: Qt.resolvedUrl("cover/CoverPage.qml")
+    cover: Qt.resolvedUrl("cover/CoverPage.qml")
     allowedOrientations: Orientation.All
     _defaultPageOrientations: Orientation.All
 }

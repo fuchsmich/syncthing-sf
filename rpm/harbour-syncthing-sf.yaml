@@ -1,18 +1,18 @@
-Name: syncthing-sf
-Summary: syncthing-sf
+Name: harbour-syncthing-sf
+Summary: SyncThing GUI
 Version: 0.1
-Release: 1
+Release: 2
 # The contents of the Group field should be one of the groups listed here:
 # http://gitorious.org/meego-developer-tools/spectacle/blobs/master/data/GROUPS
 Group: Qt/Qt
-URL: http://example.org/
-License: LICENSE
+URL: https://github.com/fuchsmich/syncthing-sf
+License: GPL3
 # This must be generated before uploading a package to a remote build service.
 # Usually this line does not need to be modified.
 Sources:
 - '%{name}-%{version}.tar.bz2'
 Description: |
-  Short description of my SailfishOS Application
+  GUI for starting, stopping and monitoring the syncthing daemon
 Configure: none
 # The qtc5 builder inserts macros to allow QtCreator to have fine
 # control over qmake/make execution
@@ -38,8 +38,8 @@ Requires:
 Files:
   - '%{_bindir}'
   - '%{_datadir}/%{name}'
-#  - '%{_datadir}/applications/%{name}.desktop'
-#  - '%{_datadir}/icons/hicolor/*/apps/%{name}.png'
+  - '%{_datadir}/applications/%{name}.desktop'
+  - '%{_datadir}/icons/hicolor/*/apps/%{name}.png'
 
 # For more information about yaml and what's supported in Sailfish OS
 # build system, please see https://wiki.merproject.org/wiki/Spectacle

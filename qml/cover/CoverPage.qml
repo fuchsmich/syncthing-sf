@@ -32,29 +32,20 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 CoverBackground {
-    property string sTtatus: app.sTstatus
-    Column {
-        anchors.centerIn: parent
-        Label {
-            id: label
-            text: qsTr("Syncthing Status")
-        }
-        Label {
-            text: sTtatus
-        }
+    CoverPlaceholder {
+        icon.source: "../harbour-syncthing.png"
+        text: syncthing_service.state
     }
 
     CoverActionList {
-        id: coverAction
-
         CoverAction {
-            iconSource: "image://theme/icon-cover-next"
-        }
 
-        CoverAction {
-            iconSource: "image://theme/icon-cover-pause"
+            iconSource: syncthing_service.state != "active" ? "image://theme/icon-cover-play"
+                                                            : "image://theme/icon-cover-pause"
+            onTriggered: syncthing_service.toggle()
         }
     }
 }
+
 
 
