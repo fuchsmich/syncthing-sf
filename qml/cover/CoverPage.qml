@@ -33,18 +33,18 @@ import Sailfish.Silica 1.0
 
 CoverBackground {
     CoverPlaceholder {
-        icon.source: "../harbour-syncthing.png"
+//        icon.source: "../harbour-syncthing.png"
         text: syncthing_service.state
     }
 
-    CoverActionList {
-        CoverAction {
+//    CoverActionList {
+//        CoverAction {
 
-            iconSource: syncthing_service.state != "active" ? "image://theme/icon-cover-play"
-                                                            : "image://theme/icon-cover-pause"
-            onTriggered: syncthing_service.toggle()
-        }
-    }
+//            iconSource: syncthing_service.state != "active" ? "image://theme/icon-cover-play"
+//                                                            : "image://theme/icon-cover-pause"
+//            onTriggered: syncthing_service.toggle()
+//        }
+//    }
 }
 
 

@@ -39,10 +39,10 @@ ApplicationWindow
 {
     SyncConnector {
         id: sc
-        Component.onCompleted: {
-            console.log("Folders", sc.folders);
-            console.log("Files", sc.files);
-        }
+//        Component.onCompleted: {
+//            console.log("Folders", sc.folders);
+//            console.log("Files", sc.files);
+//        }
     }
     DBusInterface {
         id: syncthing_service
@@ -59,21 +59,38 @@ ApplicationWindow
             , ["replace"])
             syncthing_service.state = syncthing_service.getProperty("ActiveState")
         }
-        Component.onCompleted: console.log(state)
+//        Component.onCompleted: console.log(state)
 
     }
-//    DBusInterface {
-//        id: connmans_wifi
+    DBusInterface {
+        id: connman_wifi
+        bus: DBus.SystemBus
+        service: "net.connman"
+        path: "/net/connman/technology/ethernet"
+        iface: "net.connman.Technology"
 
-//        service: "net.connman"
-//        path: "/net/connman/technology/wifi"
-//        iface: "net.connman.Technology"
+        signalsEnabled: true
+        property bool wifiConnected
 
-//        property var props: getProperty("GetProperties")
+        onWifiConnectedChanged: {}
 
-//        Component.onCompleted: console.log(props)
 
-//    }
+        function propertyChanged(name, value) {
+            console.log(name, value)
+            if (name === "Connected") {
+                wifiConnected = value
+            }
+        }
+
+        function getProperties() {
+            typedCall('GetProperties', undefined, function(result) {wifiConnected = result['Connected']})
+        }
+
+        Component.onCompleted: {
+            console.log(getProperties());
+        }
+
+    }
 
     //    Item {
     //        id:sc

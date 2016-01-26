@@ -76,6 +76,12 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
                 onClicked: syncthing_service.toggle()
             }
+            Label {
+                x: Theme.paddingLarge
+                text: qsTr("WifiStatus") + (connman_wifi.wifiConnected ? "Connected" : "Not Connected")
+//                color: Theme.secondaryHighlightColor
+//                font.pixelSize: Theme.fontSizeExtraLarge
+            }
 
             SectionHeader {
                 text: qsTr("Service")

@@ -46,7 +46,7 @@ QQuickSyncConnector::QQuickSyncConnector(QObject *parent)
 
 QList<QObject *> QQuickSyncConnector::files()
 {
-    qDebug() << "Reading Files";
+//    qDebug() << "Reading Files";
     QList<QObject *> syncedFilesActions;
     using namespace qst::utilities;
     if (mLastSyncedFiles.size() > 0)
@@ -184,7 +184,7 @@ void QQuickSyncConnector::testUrl()
 
 void QQuickSyncConnector::pauseSyncthingClicked(int state)
 {
-    qDebug() << "pause " << state;
+//    qDebug() << "pause " << state;
     mpSyncConnector->pauseSyncthing(state == 1);
 }
 
