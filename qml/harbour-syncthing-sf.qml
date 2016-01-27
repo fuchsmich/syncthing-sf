@@ -70,6 +70,7 @@ ApplicationWindow
             console.log("signal!")
         }
 
+
         //        property var allProps
         ////        onAllPropsChanged: console.log(JSON.stringify(allProps))
 
@@ -97,7 +98,6 @@ ApplicationWindow
 
         property string state: getProperty("ActiveState")
         property bool runOnlyOnWifiConnection: true
-
         //        signalsEnabled: true
 
         //        onPropertiesChanged: {
@@ -107,7 +107,6 @@ ApplicationWindow
         function refreshState() {
             state = getProperty("ActiveState")
         }
-
         function toggle() {
             syncthingService.call(
                         syncthingService.state != "active" ? "Start" : "Stop"
