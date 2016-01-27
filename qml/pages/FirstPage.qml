@@ -78,7 +78,7 @@ Page {
             }
             Label {
                 x: Theme.paddingLarge
-                text: qsTr("WifiStatus") + (connman_wifi.wifiConnected ? "Connected" : "Not Connected")
+                text: qsTr("WifiStatus: ") + (connman_wifi.wifiConnected ? "Connected" : "Not Connected")
 //                color: Theme.secondaryHighlightColor
 //                font.pixelSize: Theme.fontSizeExtraLarge
             }

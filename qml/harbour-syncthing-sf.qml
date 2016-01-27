@@ -43,7 +43,27 @@ ApplicationWindow
 //            console.log("Folders", sc.folders);
 //            console.log("Files", sc.files);
 //        }
+        onStatusChanged: syncthing_service.state = syncthing_service.getProperty("ActiveState")
     }
+
+    DBusInterface {
+        id: syncthingServiceListener
+
+        service: "org.freedesktop.systemd1"
+        path: "/org/freedesktop/systemd1/unit/syncthing_2eservice"
+        iface: "org.freedesktop.DBus.Properties"
+
+        signalsEnabled: true
+
+        function propertiesChanged(mInterface, changed_properties, invalidated_properties) {
+            console.log(mInterface, changed_properties)
+            if ((mIinterface == "org.freedesktop.systemd1.Unit") && changed_properties['ActiveState']) {
+                syncthing_service.state = changed_properties['ActiveState'];
+            }
+
+        }
+    }
+
     DBusInterface {
         id: syncthing_service
 
@@ -52,6 +72,9 @@ ApplicationWindow
         iface: "org.freedesktop.systemd1.Unit"
 
         property string state: getProperty("ActiveState")
+        onStateChanged: {
+            console.log(state)
+        }
 
         function toggle() {
             syncthing_service.call(
@@ -60,13 +83,14 @@ ApplicationWindow
             syncthing_service.state = syncthing_service.getProperty("ActiveState")
         }
 //        Component.onCompleted: console.log(state)
-
     }
+
     DBusInterface {
         id: connman_wifi
         bus: DBus.SystemBus
         service: "net.connman"
-        path: "/net/connman/technology/ethernet"
+        path: "/net/connman/technology/ethernet" //no wifi on emulator
+//        path: "/net/connman/technology/wifi"
         iface: "net.connman.Technology"
 
         signalsEnabled: true
@@ -89,7 +113,6 @@ ApplicationWindow
         Component.onCompleted: {
             console.log(getProperties());
         }
-
     }
 
     //    Item {
