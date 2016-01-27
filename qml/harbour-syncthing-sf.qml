@@ -47,7 +47,7 @@ ApplicationWindow
     }
 
     DBusInterface {
-        id: syncthingServiceListener
+//        id: syncthingServiceListener
 
         service: "org.freedesktop.systemd1"
         path: "/org/freedesktop/systemd1/unit/syncthing_2eservice"
@@ -61,6 +61,16 @@ ApplicationWindow
                 syncthing_service.state = changed_properties['ActiveState'];
             }
 
+        }
+
+        function getAll() {
+            typedCall('GetAll', {'type': 's', 'value': 'org.freedesktop.systemd1.Unit'},
+                      function(result) { console.log('gotAll', result['Id']) },
+                      function(result) { console.log('failed') })
+        }
+
+        Component.onCompleted: {
+            getAll();
         }
     }
 
