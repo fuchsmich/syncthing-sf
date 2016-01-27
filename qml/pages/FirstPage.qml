@@ -72,16 +72,18 @@ Page {
                 text: qsTr("Service")
             }
             Button {
-                text: syncthing_service.state != "active" ? "Start" : "Stop"
+                text: syncthingService.state //!= "active" ? "Start" : "Stop"
                 anchors.horizontalCenter: parent.horizontalCenter
-                onClicked: syncthing_service.toggle()
+                onClicked: syncthingService.toggle()
             }
-            Label {
+            TextSwitch {
                 x: Theme.paddingLarge
-                text: qsTr("WifiStatus") + (connman_wifi.wifiConnected ? "Connected" : "Not Connected")
-//                color: Theme.secondaryHighlightColor
-//                font.pixelSize: Theme.fontSizeExtraLarge
+                text: qsTr("WifiStatus: ") + (connman_wifi.wifiConnected ? "Connected" : "Not Connected")
+                description: "run service only on Wifi-connection"
+                checked: syncthingService.runOnlyOnWifiConnection
+                onCheckedChanged: syncthingService.runOnlyOnWifiConnection = checked
             }
+
 
             SectionHeader {
                 text: qsTr("Service")

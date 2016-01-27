@@ -37,44 +37,104 @@ import SyncConnector 1.0
 
 ApplicationWindow
 {
+    id: app
+
     SyncConnector {
         id: sc
-//        Component.onCompleted: {
-//            console.log("Folders", sc.folders);
-//            console.log("Files", sc.files);
-//        }
+        //        Component.onCompleted: {
+        //            console.log("Folders", sc.folders);
+        //            console.log("Files", sc.files);
+        //        }
+        onStatusChanged: syncthingService.refreshState()
     }
+
     DBusInterface {
-        id: syncthing_service
+        id: syncthingServiceListener
+
+        service: "org.freedesktop.systemd1"
+        path: "/org/freedesktop/systemd1/unit/syncthing_2eservice"
+        iface: "org.freedesktop.DBus.Properties"
+
+        property string polledInterface: syncthingService.iface
+
+        signalsEnabled: true
+
+        //        function propertiesChanged(ifc, changed_properties,
+        //                                   invalidated_properties) {
+        //            console.log("signal PropertiesChanged caught")
+        //        if (ifc === polledInterface) {
+        //            console.log(syncthingService.getProperty("ActiveState"))
+        //        }
+        //        }
+        onPropertiesChanged: {
+            console.log("signal!")
+        }
+
+        //        property var allProps
+        ////        onAllPropsChanged: console.log(JSON.stringify(allProps))
+
+        //        function getAll(ifc) {
+        //            typedCall('GetAll',
+        //                      {'type': 's', 'value': ifc},
+        //                      function(result){
+        //                          allProps = result;
+        //                          console.log(result['ActiveState'])
+        //                      },
+        //                      function() {
+        //                          console.log('call failed')
+        //                      })
+        //        }
+
+        //        Component.onCompleted: getAll(polledInterface)
+    }
+
+    DBusInterface {
+        id: syncthingService
 
         service: "org.freedesktop.systemd1"
         path: "/org/freedesktop/systemd1/unit/syncthing_2eservice"
         iface: "org.freedesktop.systemd1.Unit"
 
         property string state: getProperty("ActiveState")
+        property bool runOnlyOnWifiConnection: true
+
+        //        signalsEnabled: true
+
+        //        onPropertiesChanged: {
+        //            console.log(getProperty("ActiveState"))
+        //        }
+
+        function refreshState() {
+            state = getProperty("ActiveState")
+        }
 
         function toggle() {
-            syncthing_service.call(
-            syncthing_service.state != "active" ? "Start" : "Stop"
-            , ["replace"])
-            syncthing_service.state = syncthing_service.getProperty("ActiveState")
+            syncthingService.call(
+                        syncthingService.state != "active" ? "Start" : "Stop"
+                        , ["replace"])
+            refreshState()
         }
-//        Component.onCompleted: console.log(state)
-
     }
+
+
     DBusInterface {
         id: connman_wifi
         bus: DBus.SystemBus
         service: "net.connman"
-        path: "/net/connman/technology/ethernet"
+//        path: "/net/connman/technology/ethernet" //Emulator hat kein Wifi
+        path: "/net/connman/technology/wifi" //<--- richtiger Pfad am Jolla
         iface: "net.connman.Technology"
 
-        signalsEnabled: true
         property bool wifiConnected
+        onWifiConnectedChanged: {
+            if (syncthingService.runOnlyOnWifiConnection) {
+                if (!wifiConnected && syncthingService.state == "active") {
+                    syncthingService.toggle()
+                }
+            }
+        }
 
-        onWifiConnectedChanged: {}
-
-
+        signalsEnabled: true
         function propertyChanged(name, value) {
             console.log(name, value)
             if (name === "Connected") {
@@ -85,36 +145,9 @@ ApplicationWindow
         function getProperties() {
             typedCall('GetProperties', undefined, function(result) {wifiConnected = result['Connected']})
         }
-
-        Component.onCompleted: {
-            console.log(getProperties());
-        }
-
+        Component.onCompleted: getProperties();
     }
 
-    //    Item {
-    //        id:sc
-    //        property string status: "dummy"
-    //        property ListModel folders: foldersLM
-    //        property ListModel files: filesLM
-    //        ListModel {
-    //            id: foldersLM
-    //            ListElement {name: "folder1"; path: "path/top"}
-    //            ListElement {name: "folder1"; path: "path/top"}
-    //        }
-    //        ListModel {
-    //            id: filesLM
-    //            ListElement {name: "file1"; path: "path/top"}
-    //            ListElement {name: "file2"; path: "path/top"}
-    //        }
-    //        Component.onCompleted: {
-    //            console.log("Folders", sc.folders);
-    //            console.log("Files", sc.files);
-    //        }
-    //    }
-
-    id: app
-    property string sTstatus: sc.status
 
     initialPage: Component { FirstPage { id: fp } }
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
