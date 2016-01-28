@@ -41,11 +41,8 @@ ApplicationWindow
 
     SyncConnector {
         id: sc
-        //        Component.onCompleted: {
-        //            console.log("Folders", sc.folders);
-        //            console.log("Files", sc.files);
-        //        }
         onStatusChanged: syncthingService.refreshState()
+        onStartStopWithWifiChanged: connman_wifi.toggleServiceDueToWifiState()
     }
 
     DBusInterface {
@@ -125,9 +122,14 @@ ApplicationWindow
         iface: "net.connman.Technology"
 
         property bool wifiConnected
-        onWifiConnectedChanged: {
-            if (syncthingService.runOnlyOnWifiConnection) {
+        onWifiConnectedChanged: toggleServiceDueToWifiState();
+
+        function toggleServiceDueToWifiState() {
+            if (sc.startStopWithWifi) {
                 if (!wifiConnected && syncthingService.state == "active") {
+                    syncthingService.toggle()
+                }
+                if (wifiConnected && syncthingService.state == "inactive") {
                     syncthingService.toggle()
                 }
             }

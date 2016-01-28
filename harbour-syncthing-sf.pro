@@ -26,7 +26,6 @@ DISTFILES += \
     qml/cover/CoverPage.qml \
     qml/harbour-syncthing-sf.qml \
     rpm/harbour-syncthing-sf.yaml \
-    rpm/harbour-syncthing-sf.spec \
     harbour-syncthing-sf.desktop \
     harbour-syncthing-sf.png
 

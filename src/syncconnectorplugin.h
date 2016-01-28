@@ -8,6 +8,7 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QSettings>
+#include <QDebug>
 
 #include <memory>
 
@@ -46,6 +47,7 @@ class QQuickSyncConnector : public QObject
     Q_PROPERTY(QString trafficTot READ trafficTot NOTIFY trafficChanged)
     Q_PROPERTY(QString numberOfConnections READ numberOfConnections NOTIFY numberOfConnectionsChanged)
     Q_PROPERTY(QUrl guiUrl READ guiUrl WRITE setGuiUrl NOTIFY guiUrlChanged)
+    Q_PROPERTY(bool startStopWithWifi READ startStopWithWifi WRITE setStartStopWithWifi NOTIFY startStopWithWifiChanged)
 
 public:
     explicit QQuickSyncConnector(QObject *parent = 0);
@@ -59,6 +61,7 @@ public:
     QString trafficOut() { return mpTrafficOutAction->text(); }
     QString trafficTot() { return mpCurrentTrafficAction->text(); }
     QUrl guiUrl() { return mCurrentUrl; }
+    bool startStopWithWifi() { return mStartStopWithWifi; }
 
 //    void setVisible(bool visible) Q_DECL_OVERRIDE;
     void updateConnectionHealth(ConnectionHealthStatus status);
@@ -66,10 +69,18 @@ public:
     void setGuiUrl(QString url) {
         mCurrentUrl.setUrl(url);
         emit guiUrlChanged();
+        saveSettings();
     }
     void setGuiUrl(QUrl url) {
         mCurrentUrl = url;
         emit guiUrlChanged();
+        saveSettings();
+    }
+
+    void setStartStopWithWifi(bool newValue) {
+        mStartStopWithWifi = newValue;
+        emit startStopWithWifiChanged();
+        saveSettings();
     }
 
     Q_INVOKABLE void pauseSyncthingClicked(int state);
@@ -81,6 +92,7 @@ signals:
     void numberOfConnectionsChanged();
     void trafficChanged();
     void guiUrlChanged();
+    void startStopWithWifiChanged();
 
 public slots:
     void testUrl();
@@ -102,25 +114,8 @@ private:
 //    int getCurrentVersion(std::string reply);
 //    void onStartAnimation(bool animate);
 
-//    QTabWidget *mpSettingsTabsWidget;
-//    QGroupBox *mpSettingsGroupBox;
-//    QLabel *mpURLLabel;
-//    QLineEdit *mpSyncthingUrlLineEdit;
 
-//    QLabel *userNameLabel;
-//    QLabel *userPasswordLabel;
-//    QLineEdit *mpUserNameLineEdit;
-//    QLineEdit *userPassword;
-//    QCheckBox *mpAuthCheckBox;
-
-//    QLabel *mpUrlTestResultLabel;
-//    QPushButton *mpTestConnectionButton;
-
-//    QGroupBox *mpAppearanceGroupBox;
-//    QCheckBox *mpMonochromeIconBox;
-//    QCheckBox *mpNotificationsIconBox;
-//    QCheckBox *mpShouldAnimateIconBox;
-
+    //TODO convert to other types
     QAction *mpConnectedState;
     QAction *mpNumberOfConnectionsAction;
     QAction *mpCurrentTrafficAction;
@@ -131,30 +126,21 @@ private:
     QAction *mpShowGitHubAction;
     QAction *mpQuitAction;
 
-//    std::list<QSharedPointer<QAction>> mCurrentFoldersActions;
     QList<QObject *> mCurrentFoldersActions;
-//    std::list<QSharedPointer<QAction>> mCurrentSyncedFilesActions;
 
     std::list<FolderNameFullPath> mCurrentFoldersLocations;
     LastSyncedFileList mLastSyncedFiles;
 
-//    QSystemTrayIcon *mpTrayIcon = nullptr;
-//    QMenu *mpTrayIconMenu = nullptr;
     QUrl mCurrentUrl;
 
     std::string mCurrentUserName;
     std::string mCurrentUserPassword;
     std::shared_ptr<qst::connector::SyncConnector> mpSyncConnector;
-//    std::unique_ptr<mfk::monitor::ProcessMonitor> mpProcessMonitor;
-//    std::unique_ptr<mfk::settings::StartupTab> mpStartupTab;
+
     QSettings mSettings;
+    bool mSettingsLoaded;
 
-//    std::unique_ptr<QMovie> mpAnimatedIconMovie;
-
-//    bool mIconMonochrome;
-//    bool mNotificationsEnabled;
-//    bool mShouldAnimateIcon;
-//    bool mShouldStopAnimation;
+    bool mStartStopWithWifi;
 //    int mLastConnectionState;
 
 };

@@ -78,10 +78,10 @@ Page {
             }
             TextSwitch {
                 x: Theme.paddingLarge
-                text: qsTr("WifiStatus: ") + (connman_wifi.wifiConnected ? "Connected" : "Not Connected")
-                description: "run service only on Wifi-connection"
-                checked: syncthingService.runOnlyOnWifiConnection
-                onCheckedChanged: syncthingService.runOnlyOnWifiConnection = checked
+                text: "Start/stop service with Wifi-connection"
+                description: "Wifi status: " + (connman_wifi.wifiConnected ? "connected" : "not connected")
+                checked: sc.startStopWithWifi
+                onCheckedChanged: sc.startStopWithWifi = checked
             }
 
 
@@ -96,7 +96,7 @@ Page {
             }
             Label {
                 x: Theme.paddingLarge
-                text: sTstatus
+                text: sc.status
                 //                color: Theme.secondaryHighlightColor
                 //                font.pixelSize: Theme.fontSizeExtraLarge
             }
