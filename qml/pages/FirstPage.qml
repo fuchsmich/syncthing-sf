@@ -36,6 +36,7 @@ import Sailfish.Silica 1.0
 Page {
     id: page
     property string sTstatus: sc.status
+    property string selectedFolder
 
     SilicaFlickable {
         anchors.fill: parent
@@ -108,23 +109,15 @@ Page {
                 x: Theme.paddingLarge
                 spacing: Theme.paddingLarge
                 Label {
-                    //                x: Theme.paddingLarge
-                    text: qsTr("In: 0,00 KB/s")
-                    //                color: Theme.secondaryHighlightColor
-                    //                font.pixelSize: Theme.fontSizeExtraLarge
+                    text: "In: " + sc.trafficIn + " KB/s"
                 }
                 Label {
-                    //                x: Theme.paddingLarge
-                    text: qsTr("Out: 0,00 KB/s")
-                    //                color: Theme.secondaryHighlightColor
-                    //                font.pixelSize: Theme.fontSizeExtraLarge
+                    text: "Out: " + sc.trafficOut + " KB/s"
                 }
             }
             Label {
                 x: Theme.paddingLarge
-                text: qsTr("Total: 0,00 KB/s")
-                //                color: Theme.secondaryHighlightColor
-                //                font.pixelSize: Theme.fontSizeExtraLarge
+                text: "Total: " + sc.trafficTot + " KB/s"
             }
             Label {
                 x: Theme.paddingLarge
@@ -134,10 +127,15 @@ Page {
             }
             Repeater {
                 model: sc.folders
-                Label {
-                    x: Theme.paddingLarge
-                    text: modelData.name + " (" + modelData.path + ")"
-                    //                    text: name + " (" + path + ")"
+                BackgroundItem {
+                    width: column.width
+                    Label {
+                        text: modelData.name
+                    }
+                    onClicked: {
+                        fp.selectedFolder = modelData.path
+                        pageStack.push(Qt.resolvedUrl("FileBrowser.qml"), {folder: modelData.path})
+                    }
                 }
             }
             Label {

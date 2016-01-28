@@ -27,7 +27,8 @@ DISTFILES += \
     qml/harbour-syncthing-sf.qml \
     rpm/harbour-syncthing-sf.yaml \
     harbour-syncthing-sf.desktop \
-    harbour-syncthing-sf.png
+    harbour-syncthing-sf.png \
+    qml/pages/FileBrowser.qml
 
 #SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 
