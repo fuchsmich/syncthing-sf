@@ -108,17 +108,13 @@ void QQuickSyncConnector::testUrl()
     {
       if (result.second)
       {
-//        mpUrlTestResultLabel->setText(tr("Status: Connected"));
         mpConnectedState->setText(tr("Connected"));
         emit statusChanged();
-//        setIcon(0);
       }
       else
       {
           mpConnectedState->setText(tr("Status: ") + result.first.c_str());
           emit statusChanged();
-//        mpUrlTestResultLabel->setText(tr("Status: ") + result.first.c_str());
-//        setIcon(1);
       }
     });
     saveSettings();
