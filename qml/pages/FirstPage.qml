@@ -134,11 +134,25 @@ Page {
             }
             Repeater {
                 model: sc.folders
-                Label {
-                    x: Theme.paddingLarge
-                    text: modelData.name + " (" + modelData.path + ")"
-                    //                    text: name + " (" + path + ")"
+                delegate: BackgroundItem {
+                    width: column.width
+                    Label {
+                        id: firstName
+                        text: modelData.name
+                        color: highlighted ? Theme.highlightColor : Theme.primaryColor
+                        anchors.verticalCenter: parent.verticalCenter
+                        x: Theme.horizontalPageMargin
+                    }
+                    onClicked: {
+                        console.log(modelData.path)
+                        Qt.openUrlExternally("file:///" + modelData.path)
+                    }
                 }
+                //                Label {
+                //                    x: Theme.paddingLarge
+                //                    text: modelData.name + " (" + modelData.path + ")"
+                //                    //                    text: name + " (" + path + ")"
+                //                }
             }
             Label {
                 x: Theme.paddingLarge

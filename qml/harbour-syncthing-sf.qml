@@ -45,46 +45,6 @@ ApplicationWindow
         onStartStopWithWifiChanged: connman_wifi.toggleServiceDueToWifiState()
     }
 
-    DBusInterface {
-        id: syncthingServiceListener
-
-        service: "org.freedesktop.systemd1"
-        path: "/org/freedesktop/systemd1/unit/syncthing_2eservice"
-        iface: "org.freedesktop.DBus.Properties"
-
-        property string polledInterface: syncthingService.iface
-
-        signalsEnabled: true
-
-        //        function propertiesChanged(ifc, changed_properties,
-        //                                   invalidated_properties) {
-        //            console.log("signal PropertiesChanged caught")
-        //        if (ifc === polledInterface) {
-        //            console.log(syncthingService.getProperty("ActiveState"))
-        //        }
-        //        }
-        onPropertiesChanged: {
-            console.log("signal!")
-        }
-
-
-        //        property var allProps
-        ////        onAllPropsChanged: console.log(JSON.stringify(allProps))
-
-        //        function getAll(ifc) {
-        //            typedCall('GetAll',
-        //                      {'type': 's', 'value': ifc},
-        //                      function(result){
-        //                          allProps = result;
-        //                          console.log(result['ActiveState'])
-        //                      },
-        //                      function() {
-        //                          console.log('call failed')
-        //                      })
-        //        }
-
-        //        Component.onCompleted: getAll(polledInterface)
-    }
 
     DBusInterface {
         id: syncthingService
@@ -95,11 +55,6 @@ ApplicationWindow
 
         property string state: getProperty("ActiveState")
         property bool runOnlyOnWifiConnection: true
-        //        signalsEnabled: true
-
-        //        onPropertiesChanged: {
-        //            console.log(getProperty("ActiveState"))
-        //        }
 
         function refreshState() {
             state = getProperty("ActiveState")
