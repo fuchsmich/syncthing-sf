@@ -26,8 +26,8 @@ QQuickSyncConnector::QQuickSyncConnector(QObject *parent)
     using namespace qst::connector;
     connect(mpSyncConnector.get(), &SyncConnector::onConnectionHealthChanged, this,
       &QQuickSyncConnector::updateConnectionHealth);
-    connect(mpSyncConnector.get(), &SyncConnector::onNetworkActivityChanged, this,
-          &QQuickSyncConnector::onNetworkActivity);
+//    connect(mpSyncConnector.get(), &SyncConnector::onNetworkActivityChanged, this,
+//          &QQuickSyncConnector::onNetworkActivity);
 
     testUrl();
 }
