@@ -46,6 +46,24 @@ ApplicationWindow
     }
 
     DBusInterface {
+        id: systemdManager
+
+        service: "org.freedesktop.systemd1"
+        path: "/org/freedesktop/systemd1"
+        iface: "org.freedesktop.systemd1.Manager"
+
+        signalsEnabled: true
+
+        function subscribe() {
+            console.log("subscribing")
+            call('Subscribed', undefined)
+        }
+
+//        Component.onCompleted:
+
+    }
+
+    DBusInterface {
         id: syncthingServiceListener
 
         service: "org.freedesktop.systemd1"
@@ -56,16 +74,16 @@ ApplicationWindow
 
         signalsEnabled: true
 
-        //        function propertiesChanged(ifc, changed_properties,
-        //                                   invalidated_properties) {
-        //            console.log("signal PropertiesChanged caught")
-        //        if (ifc === polledInterface) {
-        //            console.log(syncthingService.getProperty("ActiveState"))
-        //        }
-        //        }
-        onPropertiesChanged: {
-            console.log("signal!")
+        function propertiesChanged(ifc, changed_properties,
+                                   invalidated_properties) {
+            console.log("signal PropertiesChanged caught")
+            if (ifc === polledInterface) {
+                console.log(syncthingService.getProperty("ActiveState"))
+            }
         }
+//        onPropertiesChanged: {
+//            console.log("signal!")
+//        }
 
 
         //        property var allProps
@@ -83,7 +101,7 @@ ApplicationWindow
         //                      })
         //        }
 
-        //        Component.onCompleted: getAll(polledInterface)
+        Component.onCompleted: systemdManager.subscribe()
     }
 
     DBusInterface {
@@ -117,8 +135,8 @@ ApplicationWindow
         id: connman_wifi
         bus: DBus.SystemBus
         service: "net.connman"
-//        path: "/net/connman/technology/ethernet" //Emulator hat kein Wifi
-        path: "/net/connman/technology/wifi" //<--- richtiger Pfad am Jolla
+        path: "/net/connman/technology/ethernet" //Emulator hat kein Wifi
+//        path: "/net/connman/technology/wifi" //<--- richtiger Pfad am Jolla
         iface: "net.connman.Technology"
 
         property bool wifiConnected
