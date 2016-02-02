@@ -25,11 +25,33 @@ QQuickSyncConnector::QQuickSyncConnector(QObject *parent)
     // Setup SyncthingConnector
     using namespace qst::connector;
     connect(mpSyncConnector.get(), &SyncConnector::onConnectionHealthChanged, this,
-      &QQuickSyncConnector::updateConnectionHealth);
-//    connect(mpSyncConnector.get(), &SyncConnector::onNetworkActivityChanged, this,
-//          &QQuickSyncConnector::onNetworkActivity);
+            &QQuickSyncConnector::updateConnectionHealth);
+    //    connect(mpSyncConnector.get(), &SyncConnector::onNetworkActivityChanged, this,
+    //          &QQuickSyncConnector::onNetworkActivity);
 
     testUrl();
+}
+
+//------------------------------------------------------------------------------------//
+
+
+QList<QObject *> QQuickSyncConnector::folders()
+{
+    QList<QObject *> foldersActions;
+    if (mCurrentFoldersLocations.size() > 0 )
+    {
+//        mCurrentFoldersLocations = mpSyncConnector->getFolders();
+        for (std::list<std::pair<std::string,
+             std::string>>::iterator it=mCurrentFoldersLocations.begin();
+             it != mCurrentFoldersLocations.end(); ++it)
+        {
+            foldersActions.append(new QFolderNameFullPath(tr(it->first.c_str()), tr(it->second.c_str())));
+        }
+//        mCurrentFoldersActions = foldersActions;
+//        emit foldersChanged();
+//        emit filesChanged();
+    }
+    return foldersActions;
 }
 
 //------------------------------------------------------------------------------------//
@@ -40,13 +62,43 @@ QList<QObject *> QQuickSyncConnector::files()
     using namespace qst::utilities;
     if (mLastSyncedFiles.size() > 0)
     {
-      for (LastSyncedFileList::iterator it=mLastSyncedFiles.begin();
-           it != mLastSyncedFiles.end(); ++it)
-      {
-        syncedFilesActions.append(new QFolderNameFullPath(tr(getCleanFileName(std::get<2>(*it)).c_str()),""));
-      }
+        for (LastSyncedFileList::iterator it=mLastSyncedFiles.begin();
+             it != mLastSyncedFiles.end(); it++)
+        {
+            std::string curFile = getCleanFileName(std::get<2>(*it));
+            syncedFilesActions.append(new QFolderNameFullPath(tr(curFile.c_str()), getFilePath(curFile), std::get<3>(*it)));
+        }
     }
     return syncedFilesActions;
+}
+
+//------------------------------------------------------------------------------------//
+
+QString QQuickSyncConnector::getFilePath(std::string findFile)
+{
+    using namespace qst::utilities;
+    using namespace qst::sysutils;
+
+    if (folders().length() > 0) {
+      LastSyncedFileList::iterator fileIterator =
+              std::find_if(mLastSyncedFiles.begin(), mLastSyncedFiles.end(),
+                           [&findFile](DateFolderFile const& elem) {
+              return getCleanFileName(std::get<2>(elem)) == findFile;
+  });
+
+      // get full path to folder
+      std::list<FolderNameFullPath>::iterator folder =
+              std::find_if(mCurrentFoldersLocations.begin(), mCurrentFoldersLocations.end(),
+                           [&fileIterator](FolderNameFullPath const& elem) {
+              return getFullCleanFileName(elem.first) == std::get<1>(*fileIterator);
+  });
+      std::string fullPath = folder->second + getPathToFileName(std::get<2>(*fileIterator))
+              + SystemUtility().getPlatformDelimiter();
+//      std::cout << "FineFile " << findFile << "Opening " << fullPath << std::endl;
+//      QDesktopServices::openUrl(QUrl::fromLocalFile(tr(fullPath.c_str())));
+      return tr(fullPath.c_str());
+    }
+    else return "";
 }
 
 //------------------------------------------------------------------------------------//
@@ -55,94 +107,84 @@ void QQuickSyncConnector::updateConnectionHealth(ConnectionHealthStatus status)
 {
     if (status.at("state") == "1")
     {
-      std::string activeConnections = status.at("activeConnections");
-      std::string totalConnections = status.at("totalConnections");
-      mpNumberOfConnectionsAction->setVisible(true);
-      mpNumberOfConnectionsAction->setText(tr("Connections: ")
-        + activeConnections.c_str()
-        + "/" + totalConnections.c_str());
-      emit numberOfConnectionsChanged();
-      mpConnectedState->setText(tr("Connected"));
-      statusChanged();
-      mpCurrentTrafficAction->setText(tr("Total: ")
-        + status.at("globalTraffic").c_str());
-      mpTrafficInAction->setText(tr("In: ") + status.at("inTraffic").c_str());
-      mpTrafficOutAction->setText(tr("Out: ") + status.at("outTraffic").c_str());
-      trafficChanged();
+        std::string activeConnections = status.at("activeConnections");
+        std::string totalConnections = status.at("totalConnections");
+        mpNumberOfConnectionsAction = (tr("Connections: ")
+                                       + activeConnections.c_str()
+                                       + "/" + totalConnections.c_str());
+        emit numberOfConnectionsChanged();
+        mpConnectedState = tr("Connected");
+        emit statusChanged();
+        mpCurrentTrafficAction = (tr("Total: ")
+                                  + status.at("globalTraffic").c_str());
+        mpTrafficInAction = (tr("In: ") + status.at("inTraffic").c_str());
+        mpTrafficOutAction = (tr("Out: ") + status.at("outTraffic").c_str());
+        emit trafficChanged();
 
-      if (mLastSyncedFiles != mpSyncConnector->getLastSyncedFiles())
-      {
-        mLastSyncedFiles = mpSyncConnector->getLastSyncedFiles();
-        emit filesChanged();
-      }
+        if (mCurrentFoldersLocations != mpSyncConnector->getFolders())
+        {
+            mCurrentFoldersLocations = mpSyncConnector->getFolders();
+            emit foldersChanged();
+        }
+
+        if (mLastSyncedFiles != mpSyncConnector->getLastSyncedFiles())
+        {
+            mLastSyncedFiles = mpSyncConnector->getLastSyncedFiles();
+            emit filesChanged();
+        }
     }
     else
     {
-      mpConnectedState->setText(tr("Not Connected"));
-      statusChanged();
+        mpConnectedState = tr("Not Connected");
+        emit statusChanged();
     }
-    createFoldersMenu();
 }
 
-//------------------------------------------------------------------------------------//
-void QQuickSyncConnector::onNetworkActivity(bool activity)
-{
-
-}
 
 //------------------------------------------------------------------------------------//
 
 void QQuickSyncConnector::testUrl()
 {
-//    std::string validateUrl = mpSyncthingUrlLineEdit->text().toStdString();
-//    std::size_t foundSSL = validateUrl.find("https");
-//    if (foundSSL!=std::string::npos)
-//    {
-//      validateSSLSupport();
-//    }
-//    mCurrentUrl = QUrl(mpSyncthingUrlLineEdit->text());
-//    mCurrentUserName = mpUserNameLineEdit->text().toStdString();
-//    mCurrentUserPassword = userPassword->text().toStdString();
+    //    std::string validateUrl = mpSyncthingUrlLineEdit->text().toStdString();
+    //    std::size_t foundSSL = validateUrl.find("https");
+    //    if (foundSSL!=std::string::npos)
+    //    {
+    //      validateSSLSupport();
+    //    }
+    //    mCurrentUrl = QUrl(mpSyncthingUrlLineEdit->text());
+    //    mCurrentUserName = mpUserNameLineEdit->text().toStdString();
+    //    mCurrentUserPassword = userPassword->text().toStdString();
     mpSyncConnector->setURL(mCurrentUrl, mCurrentUserName,
-       mCurrentUserPassword, [&](std::pair<std::string, bool> result)
+                            mCurrentUserPassword, [&](std::pair<std::string, bool> result)
     {
-      if (result.second)
-      {
-        mpConnectedState->setText(tr("Connected"));
-        emit statusChanged();
-      }
-      else
-      {
-          mpConnectedState->setText(tr("Status: ") + result.first.c_str());
-          emit statusChanged();
-      }
+        if (result.second)
+        {
+            mpConnectedState = tr("Connected");
+            emit statusChanged();
+        }
+        else
+        {
+            mpConnectedState = (tr("Status: ") + result.first.c_str());
+            emit statusChanged();
+        }
     });
     saveSettings();
 }
 
 //------------------------------------------------------------------------------------//
 
-void QQuickSyncConnector::pauseSyncthingClicked(int state)
-{
-    mpSyncConnector->pauseSyncthing(state == 1);
-}
-
-//------------------------------------------------------------------------------------//
-
 void QQuickSyncConnector::createActions()
 {
+    mpConnectedState = tr("Not Connected");
+    emit statusChanged();
 
-    //TODO Actions mit signale mit verbinden
-    mpConnectedState = new QAction(tr("Not Connected"), this);
-    mpConnectedState->setDisabled(true);
+    mpNumberOfConnectionsAction = tr("Connections: 0");
+    emit numberOfConnectionsChanged();
 
-    mpNumberOfConnectionsAction = new QAction(tr("Connections: 0"), this);
-    mpNumberOfConnectionsAction->setDisabled(true);
-
-    mpCurrentTrafficAction = new QAction(tr("Total: 0.00 KB/s"), this);
-    mpTrafficInAction = new QAction(tr("In: 0 KB/s"), this);
-    mpTrafficOutAction = new QAction(tr("Out: 0 KB/s"), this);
-
+    mpCurrentTrafficAction = tr("Total: 0.00 KB/s");
+    mpTrafficInAction = tr("In: 0 KB/s");
+    mpTrafficOutAction = tr("Out: 0 KB/s");
+    emit trafficChanged();
 }
 
 //------------------------------------------------------------------------------------//
@@ -164,37 +206,18 @@ void QQuickSyncConnector::loadSettings()
     mSettingsLoaded = false;
     if (!mSettings.value("doSettingsExist").toBool())
     {
-      createDefaultSettings();
+        createDefaultSettings();
     }
 
     setGuiUrl(mSettings.value("url").toString());
     if (mCurrentUrl.toString().length() == 0)
     {
-      setGuiUrl(tr("http://127.0.0.1:8384"));
+        setGuiUrl(tr("http://127.0.0.1:8384"));
     }
     mCurrentUserPassword = mSettings.value("userpassword").toString().toStdString();
     mCurrentUserName = mSettings.value("username").toString().toStdString();
     mStartStopWithWifi = mSettings.value("startStopWithWifi").toBool();
     mSettingsLoaded = true;
-}
-
-//------------------------------------------------------------------------------------//
-
-void QQuickSyncConnector::createFoldersMenu()
-{
-    QList<QObject *> foldersActions;
-    if (mCurrentFoldersLocations != mpSyncConnector->getFolders())
-    {
-      mCurrentFoldersLocations = mpSyncConnector->getFolders();
-      for (std::list<std::pair<std::string,
-        std::string>>::iterator it=mCurrentFoldersLocations.begin();
-        it != mCurrentFoldersLocations.end(); ++it)
-      {
-          foldersActions.append(new QFolderNameFullPath(tr(it->first.c_str()), tr(it->second.c_str())));
-      }
-      mCurrentFoldersActions = foldersActions;
-      emit foldersChanged();
-    }
 }
 
 //------------------------------------------------------------------------------------//

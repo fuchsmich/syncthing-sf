@@ -22,8 +22,8 @@
 #pragma once
 #include <stdio.h>
 #include <QObject>
-#include <QSystemTrayIcon>
-//#include <QTimer>
+//#include <QSystemTrayIcon>
+#include <QTimer>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QAuthenticator>

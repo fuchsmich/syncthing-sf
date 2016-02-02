@@ -19,8 +19,8 @@
 #include "syncconnector.h"
 #include <QtGui>
 #include <QObject>
-#include <QMessageBox>
-#include <QStyleFactory>
+//#include <QMessageBox>
+//#include <QStyleFactory>
 #include <iostream>
 #include "platforms.hpp"
 #include "utilities.hpp"
@@ -326,12 +326,12 @@ void SyncConnector::spawnSyncthingProcess(
   {
     if (!checkIfFileExists(tr(filePath.c_str())) && onSetPath)
     {
-      QMessageBox msgBox;
-      msgBox.setText("Could not find Syncthing.");
-      msgBox.setInformativeText("Are you sure the path is correct?");
-      msgBox.setStandardButtons(QMessageBox::Ok);
-      msgBox.setDefaultButton(QMessageBox::Ok);
-      msgBox.exec();
+//      QMessageBox msgBox;
+//      msgBox.setText("Could not find Syncthing.");
+//      msgBox.setInformativeText("Are you sure the path is correct?");
+//      msgBox.setStandardButtons(QMessageBox::Ok);
+//      msgBox.setDefaultButton(QMessageBox::Ok);
+//      msgBox.exec();
     }
     if (!systemUtil.isBinaryRunning(std::string("syncthing")))
     {
@@ -366,12 +366,12 @@ void SyncConnector::spawnINotifyProcess(
   {
     if (!checkIfFileExists(tr(filePath.c_str())) && onSetPath)
     {
-      QMessageBox msgBox;
-      msgBox.setText("Could not find iNotify.");
-      msgBox.setInformativeText("Are you sure the path is correct?");
-      msgBox.setStandardButtons(QMessageBox::Ok);
-      msgBox.setDefaultButton(QMessageBox::Ok);
-      msgBox.exec();
+//      QMessageBox msgBox;
+//      msgBox.setText("Could not find iNotify.");
+//      msgBox.setInformativeText("Are you sure the path is correct?");
+//      msgBox.setStandardButtons(QMessageBox::Ok);
+//      msgBox.setDefaultButton(QMessageBox::Ok);
+//      msgBox.exec();
     }
     if (!systemUtil.isBinaryRunning(std::string("syncthing-inotify")))
     {
@@ -413,15 +413,15 @@ void SyncConnector::ignoreSslErrors(QNetworkReply *reply)
     if (found != std::string::npos && foundHttp != std::string::npos
       && !didShowSSLWarning)
     {
-      QMessageBox *msgBox = new QMessageBox;
-      msgBox->setText("SSL Warning");
-      msgBox->setInformativeText("The SyncThing Server seems to have HTTPS activated, "
-        "however you are using HTTP. Please make sure to use a correct URL.");
-      msgBox->setStandardButtons(QMessageBox::Ok);
-      msgBox->setDefaultButton(QMessageBox::Ok);
-      msgBox->setAttribute(Qt::WA_DeleteOnClose);
-      msgBox->show();
-      msgBox->setFocus();
+//      QMessageBox *msgBox = new QMessageBox;
+//      msgBox->setText("SSL Warning");
+//      msgBox->setInformativeText("The SyncThing Server seems to have HTTPS activated, "
+//        "however you are using HTTP. Please make sure to use a correct URL.");
+//      msgBox->setStandardButtons(QMessageBox::Ok);
+//      msgBox->setDefaultButton(QMessageBox::Ok);
+//      msgBox->setAttribute(Qt::WA_DeleteOnClose);
+//      msgBox->show();
+//      msgBox->setFocus();
       didShowSSLWarning = true;
     }
   }

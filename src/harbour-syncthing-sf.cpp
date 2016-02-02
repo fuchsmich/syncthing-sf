@@ -25,9 +25,9 @@
 #include "syncconnectorplugin.h"
 
 
-#include <QApplication>
+//#include <QApplication>
 
-#include <QMessageBox>
+//#include <QMessageBox>
 //#include "window.h"
 
 
@@ -35,18 +35,8 @@ int main(int argc, char *argv[])
 {
 //    Q_INIT_RESOURCE(qsyncthing);
 
-    QApplication app(argc, argv);
+//    QApplication app(argc, argv);
 
-//    if (!QSystemTrayIcon::isSystemTrayAvailable()) {
-//        QMessageBox::critical(0, QObject::tr("QSyncthingTray"),
-//                              QObject::tr("I couldn't detect any system tray "
-//                                          "on this system."));
-//        return 1;
-//    }
-//    QApplication::setQuitOnLastWindowClosed(false);
-
-//    Window window;
-//    return app.exec();
     qmlRegisterType<QQuickSyncConnector>("SyncConnector", 1, 0, "SyncConnector");
     return SailfishApp::main(argc, argv);
 

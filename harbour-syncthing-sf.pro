@@ -17,7 +17,7 @@ HEADERS += qst/syncconnector.h \
 
 SOURCES += qst/syncconnector.cpp
 
-QT += widgets
+#QT += widgets
 QT += network
 
 DISTFILES += \
@@ -28,7 +28,8 @@ DISTFILES += \
     rpm/harbour-syncthing-sf.yaml \
     harbour-syncthing-sf.desktop \
     harbour-syncthing-sf.png \
-    qml/pages/FileBrowser.qml
+    qml/pages/FileBrowser.qml \
+    qml/pages/FolderDelegate.qml
 
 #SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 

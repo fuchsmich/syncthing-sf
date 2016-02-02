@@ -3,7 +3,7 @@
 
 #include "../qst/syncconnector.h"
 #include "../qst/platforms.hpp"
-#include <QAction>
+//#include <QAction>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -16,21 +16,29 @@ class QFolderNameFullPath : public QObject {
     Q_OBJECT
     Q_PROPERTY(QString name MEMBER m_name NOTIFY nameChanged)
     Q_PROPERTY(QString path MEMBER m_path NOTIFY pathChanged)
+    Q_PROPERTY(bool deleted MEMBER m_deleted NOTIFY deletedChanged)
 
 public:
     explicit QFolderNameFullPath(QObject *parent = 0);
-    QFolderNameFullPath(QString name, QString path) {
+    QFolderNameFullPath(QString name, QString path) : m_deleted(true) {
         m_name = name;
         m_path = path;
+    }
+    QFolderNameFullPath(QString name, QString path, bool deleted) {
+        m_name = name;
+        m_path = path;
+        m_deleted = deleted;
     }
 
 signals:
     void nameChanged();
     void pathChanged();
+    void deletedChanged();
 
 private:
     QString m_name;
     QString m_path;
+    bool m_deleted;
 };
 
 
@@ -53,19 +61,18 @@ public:
     explicit QQuickSyncConnector(QObject *parent = 0);
 
     // QtQucik Properties
-    QList<QObject*> folders() { return mCurrentFoldersActions; }
+    QList<QObject*> folders();
     QList<QObject*> files();
-    QString status() { return mpConnectedState->text(); }
-    QString numberOfConnections() { return mpNumberOfConnectionsAction->text(); }
-    QString trafficIn() { return mpTrafficInAction->text(); }
-    QString trafficOut() { return mpTrafficOutAction->text(); }
-    QString trafficTot() { return mpCurrentTrafficAction->text(); }
+    QString getFilePath(std::string findFile);
+    QString status() { return mpConnectedState; }
+    QString numberOfConnections() { return mpNumberOfConnectionsAction; }
+    QString trafficIn() { return mpTrafficInAction; }
+    QString trafficOut() { return mpTrafficOutAction; }
+    QString trafficTot() { return mpCurrentTrafficAction; }
     QUrl guiUrl() { return mCurrentUrl; }
     bool startStopWithWifi() { return mStartStopWithWifi; }
 
-//    void setVisible(bool visible) Q_DECL_OVERRIDE;
     void updateConnectionHealth(ConnectionHealthStatus status);
-    void onNetworkActivity(bool activity);
     void setGuiUrl(QString url) {
         mCurrentUrl.setUrl(url);
         emit guiUrlChanged();
@@ -83,8 +90,6 @@ public:
         saveSettings();
     }
 
-    Q_INVOKABLE void pauseSyncthingClicked(int state);
-
 signals:
     void foldersChanged();
     void filesChanged();
@@ -100,33 +105,16 @@ public slots:
 private slots:
 
 private:
-//    void createSettingsGroupBox();
     void createActions();
-//    void createTrayIcon();
     void saveSettings();
     void loadSettings();
-//    void showAuthentication(bool show);
-//    void showMessage(std::string title, std::string body);
-    void createFoldersMenu();
-//    void createLastSyncedMenu();
     void createDefaultSettings();
-//    void validateSSLSupport();
-//    int getCurrentVersion(std::string reply);
-//    void onStartAnimation(bool animate);
 
-
-    //TODO convert to other types
-    QAction *mpConnectedState;
-    QAction *mpNumberOfConnectionsAction;
-    QAction *mpCurrentTrafficAction;
-    QAction *mpTrafficInAction;
-    QAction *mpTrafficOutAction;
-//    QAction *mpShowWebViewAction;
-    QAction *mpPreferencesAction;
-    QAction *mpShowGitHubAction;
-    QAction *mpQuitAction;
-
-    QList<QObject *> mCurrentFoldersActions;
+    QString mpConnectedState;
+    QString mpNumberOfConnectionsAction;
+    QString mpCurrentTrafficAction;
+    QString mpTrafficInAction;
+    QString mpTrafficOutAction;
 
     std::list<FolderNameFullPath> mCurrentFoldersLocations;
     LastSyncedFileList mLastSyncedFiles;

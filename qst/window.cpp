@@ -405,7 +405,7 @@ void Window::syncedFileClicked()
                [&findFile](DateFolderFile const& elem) {
                  return getCleanFileName(std::get<2>(elem)) == findFile;
                });
-  
+
   // get full path to folder
   std::list<FolderNameFullPath>::iterator folder =
   std::find_if(mCurrentFoldersLocations.begin(), mCurrentFoldersLocations.end(),

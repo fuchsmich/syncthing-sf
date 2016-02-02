@@ -95,29 +95,32 @@ Page {
                 color: Theme.secondaryHighlightColor
                 font.pixelSize: Theme.fontSizeExtraLarge
             }
-            Label {
+            Row {
                 x: Theme.paddingLarge
-                text: sc.status
-                //                color: Theme.secondaryHighlightColor
-                //                font.pixelSize: Theme.fontSizeExtraLarge
-            }
-            Label {
-                x: Theme.paddingLarge
-                text: sc.numberOfConnections
+                spacing: Theme.paddingLarge
+                Label {
+                    text: sc.status
+                }
+                Label {
+                    text: sc.numberOfConnections
+                }
             }
             Row {
                 x: Theme.paddingLarge
                 spacing: Theme.paddingLarge
                 Label {
-                    text: "In: " + sc.trafficIn + " KB/s"
+                    text: sc.trafficIn
+                    font.pixelSize: Theme.fontSizeTiny
                 }
                 Label {
-                    text: "Out: " + sc.trafficOut + " KB/s"
+                    text: sc.trafficOut
+                    font.pixelSize: Theme.fontSizeTiny
                 }
-            }
-            Label {
-                x: Theme.paddingLarge
-                text: "Total: " + sc.trafficTot + " KB/s"
+                Label {
+                    x: Theme.paddingLarge
+                    text: sc.trafficTot
+                    font.pixelSize: Theme.fontSizeTiny
+                }
             }
             Label {
                 x: Theme.paddingLarge
@@ -127,14 +130,21 @@ Page {
             }
             Repeater {
                 model: sc.folders
-                BackgroundItem {
-                    width: column.width
-                    Label {
-                        text: modelData.name
-                    }
+//                BackgroundItem {
+//                    width: column.width
+//                    Label {
+//                        x: Theme.paddingLarge
+//                        text: modelData.name
+//                        verticalAlignment: Text.AlignVCenter
+//                    }
+//                }
+                FolderDelegate {
+                    x: Theme.paddingLarge
+                    text: modelData.name
+                    iconSource: "image://theme/icon-m-folder"
                     onClicked: {
                         fp.selectedFolder = modelData.path
-                        pageStack.push(Qt.resolvedUrl("FileBrowser.qml"), {folder: modelData.path})
+                        pageStack.push(Qt.resolvedUrl("FileBrowser.qml"), {rootFolder: modelData.path})
                     }
                 }
             }
@@ -146,10 +156,17 @@ Page {
             }
             Repeater {
                 model: sc.files
-                Label {
+                FolderDelegate {
                     x: Theme.paddingLarge
-                    text: modelData.name + " (" + modelData.path + ")"
-                    //                    text: name + " (" + path + ")"
+                    text: modelData.name
+                    iconSource: "image://theme/icon-m-document"
+                    highlighted: !modelData.deleted
+                    onClicked: {
+                        if (!modelData.deleted) {
+                            fp.selectedFolder = modelData.path
+                            pageStack.push(Qt.resolvedUrl("FileBrowser.qml"), {rootFolder: modelData.path})
+                        }
+                    }
                 }
             }
         }
