@@ -47,6 +47,7 @@ Page {
                 title: qsTr("Settings")
             }
             TextField {
+                enabled: false
                 width: parent.width
 //                readOnly: true
                 label: "URL of Web UI"
@@ -54,6 +55,7 @@ Page {
 //                horizontalAlignment: textAlignment
             }
             TextSwitch {
+                enabled: false
                 id: swStart
                 text: "Start/Quit SyncThing with syncthing-sf"
             }
@@ -66,6 +68,7 @@ Page {
 //                horizontalAlignment: textAlignment
             }
             Label {
+                enabled: false
                 x: Theme.paddingLarge
                 text: "Sync only on Following Interfaces"
 
@@ -73,10 +76,12 @@ Page {
                 //                font.pixelSize: Theme.fontSizeExtraLarge
             }
             TextSwitch {
+                enabled: false
                 text: "WLAN"
                 checked: true
             }
             TextSwitch {
+                enabled: false
                 text: "Mobile Internet"
                 checked: true
             }

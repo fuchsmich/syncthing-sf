@@ -1,6 +1,6 @@
 Name: harbour-syncthing-sf
 Summary: SyncThing GUI
-Version: 0.1.2
+Version: 0.1.3
 Release: 1
 # The contents of the Group field should be one of the groups listed here:
 # http://gitorious.org/meego-developer-tools/spectacle/blobs/master/data/GROUPS
@@ -40,8 +40,8 @@ Files:
   - '%{_datadir}/%{name}'
   - '%{_datadir}/applications/%{name}.desktop'
   - '%{_datadir}/icons/hicolor/*/apps/%{name}.png'
-  - '%{_datadir}/%{name}/%{name}.png'
-  - '%{_datadir}/%{name}/libexec/syncthing'
+#  - '%{_datadir}/%{name}/%{name}.png'
+#  - '%{_datadir}/%{name}/libexec/syncthing'
   - '%{_libdir}/systemd/user/syncthing.service'
 
 # For more information about yaml and what's supported in Sailfish OS
