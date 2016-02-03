@@ -25,15 +25,23 @@ DISTFILES += \
     qml/pages/Settings.qml \
     qml/cover/CoverPage.qml \
     qml/harbour-syncthing-sf.qml \
-    rpm/harbour-syncthing-sf.yaml \
-    harbour-syncthing-sf.desktop \
-    harbour-syncthing-sf.png \
     qml/pages/FileBrowser.qml \
-    qml/pages/FolderDelegate.qml
+    qml/pages/FolderDelegate.qml \
+    harbour-syncthing-sf.desktop \
+    rpm/harbour-syncthing-sf.yaml \
+    rpm/harbour-syncthing-sf.spec
 
-#SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
+SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 
-#INSTALLS += cover-icon
-#  cover-icon.path = /usr/share/harbour-syncthing
-#  cover-icon.files = harbour-syncthing-sf.png
+INSTALLS += cover-icon
+  cover-icon.path = /usr/share/harbour-syncthing-sf
+  cover-icon.files = harbour-syncthing-sf.png
 
+
+INSTALLS += service
+  service.path = /usr/lib/systemd/user
+  service.files = syncthing.service
+
+INSTALLS += syncthing
+  syncthing.path = /usr/share/harbour-syncthing-sf/libexec
+  syncthing.files = syncthing
