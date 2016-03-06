@@ -44,5 +44,5 @@ INSTALLS += service
 
 INSTALLS += syncthing
   syncthing.path = /usr/share/harbour-syncthing-sf/libexec
-#  syncthing.files = syncthing.net/386/syncthing  #emulator
-  syncthing.files = syncthing.net/arm/syncthing  #jolla
+  syncthing.files = syncthing.net/386/syncthing  #emulator
+#  syncthing.files = syncthing.net/arm/syncthing  #jolla

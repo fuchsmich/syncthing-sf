@@ -43,6 +43,14 @@ ApplicationWindow
         id: sc
         onStatusChanged: syncthingService.refreshState()
         onStartStopWithWifiChanged: connman_wifi.toggleServiceDueToWifiState()
+        Component.onCompleted: {
+//            console.log("los gehts");
+            if (startStopWithApp) syncthingService.start();
+        }
+        Component.onDestruction: {
+//            console.log("und tschü");
+            if (startStopWithApp) syncthingService.stop();
+        }
     }
 
     DBusInterface {
@@ -53,15 +61,28 @@ ApplicationWindow
         iface: "org.freedesktop.systemd1.Unit"
 
         property string state: getProperty("ActiveState")
-        property bool runOnlyOnWifiConnection: true
+        property bool readyToStart: !sc.startStopWithWifi || (sc.startStopWithWifi && connman_wifi.wifiConnected)
 
         function refreshState() {
             state = getProperty("ActiveState")
         }
+        function start() {
+            if (readyToStart && syncthingService.state != "active") {
+                syncthingService.call("Start", ["replace"]);
+                refreshState()
+            }
+        }
+        function stop() {
+            if (syncthingService.state == "active") {
+                syncthingService.call("Stop", ["replace"]);
+                refreshState()
+            }
+        }
+
         function toggle() {
             syncthingService.call(
                         syncthingService.state != "active" ? "Start" : "Stop"
-                        , ["replace"])
+                        , ["replace"]);
             refreshState()
         }
     }
@@ -80,11 +101,11 @@ ApplicationWindow
 
         function toggleServiceDueToWifiState() {
             if (sc.startStopWithWifi) {
-                if (!wifiConnected && syncthingService.state == "active") {
-                    syncthingService.toggle()
+                if (!wifiConnected) {
+                    syncthingService.stop()
                 }
-                if (wifiConnected && syncthingService.state == "inactive") {
-                    syncthingService.toggle()
+                if (wifiConnected) {
+                    syncthingService.start()
                 }
             }
         }
@@ -102,7 +123,6 @@ ApplicationWindow
         }
         Component.onCompleted: getProperties();
     }
-
 
     initialPage: Component { FirstPage { id: fp } }
 

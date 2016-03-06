@@ -56,6 +56,7 @@ class QQuickSyncConnector : public QObject
     Q_PROPERTY(QString numberOfConnections READ numberOfConnections NOTIFY numberOfConnectionsChanged)
     Q_PROPERTY(QUrl guiUrl READ guiUrl WRITE setGuiUrl NOTIFY guiUrlChanged)
     Q_PROPERTY(bool startStopWithWifi READ startStopWithWifi WRITE setStartStopWithWifi NOTIFY startStopWithWifiChanged)
+    Q_PROPERTY(bool startStopWithApp READ startStopWithApp WRITE setStartStopWithApp NOTIFY startStopWithAppChanged)
 
 public:
     explicit QQuickSyncConnector(QObject *parent = 0);
@@ -71,6 +72,7 @@ public:
     QString trafficTot() { return mpCurrentTrafficAction; }
     QUrl guiUrl() { return mCurrentUrl; }
     bool startStopWithWifi() { return mStartStopWithWifi; }
+    bool startStopWithApp() { return mStartStopWithApp; }
 
     void updateConnectionHealth(ConnectionHealthStatus status);
     void setGuiUrl(QString url) {
@@ -89,6 +91,11 @@ public:
         emit startStopWithWifiChanged();
         saveSettings();
     }
+    void setStartStopWithApp(bool newValue) {
+        mStartStopWithApp = newValue;
+        emit startStopWithAppChanged();
+        saveSettings();
+    }
 
 signals:
     void foldersChanged();
@@ -98,6 +105,7 @@ signals:
     void trafficChanged();
     void guiUrlChanged();
     void startStopWithWifiChanged();
+    void startStopWithAppChanged();
 
 public slots:
     void testUrl();
@@ -129,6 +137,7 @@ private:
     bool mSettingsLoaded;
 
     bool mStartStopWithWifi;
+    bool mStartStopWithApp;
 //    int mLastConnectionState;
 
 };

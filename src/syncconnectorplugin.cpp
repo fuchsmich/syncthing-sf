@@ -196,6 +196,7 @@ void QQuickSyncConnector::saveSettings()
         mSettings.setValue("username", "");
         mSettings.setValue("userpassword", "");
         mSettings.setValue("startStopWithWifi", mStartStopWithWifi);
+        mSettings.setValue("startStopWithApp", mStartStopWithApp);
     }
 }
 
@@ -217,6 +218,7 @@ void QQuickSyncConnector::loadSettings()
     mCurrentUserPassword = mSettings.value("userpassword").toString().toStdString();
     mCurrentUserName = mSettings.value("username").toString().toStdString();
     mStartStopWithWifi = mSettings.value("startStopWithWifi").toBool();
+    mStartStopWithApp = mSettings.value("startStopWithApp").toBool();
     mSettingsLoaded = true;
 }
 
@@ -226,6 +228,7 @@ void QQuickSyncConnector::createDefaultSettings()
 {
     mSettings.setValue("url", tr("http://127.0.0.1:8384"));
     mSettings.setValue("startStopWithWifi", true);
+    mSettings.setValue("startStopWithApp", false);
     mSettings.setValue("doSettingsExist", true);
 }
 

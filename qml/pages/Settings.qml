@@ -46,18 +46,21 @@ Page {
             PageHeader {
                 title: qsTr("Settings")
             }
+            TextSwitch {
+                enabled: true
+                id: swStart
+                text: "start/stop SyncThing daemon with app"
+                checked: sc.startStopWithApp
+                onCheckedChanged: sc.startStopWithApp = checked
+            }
             TextField {
+                visible: false
                 enabled: false
                 width: parent.width
 //                readOnly: true
                 label: "URL of Web UI"
                 text: sc.guiUrl
 //                horizontalAlignment: textAlignment
-            }
-            TextSwitch {
-                enabled: false
-                id: swStart
-                text: "Start/Quit SyncThing with syncthing-sf"
             }
             TextField {
                 enabled: swStart.checked

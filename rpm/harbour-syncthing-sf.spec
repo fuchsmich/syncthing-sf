@@ -14,7 +14,7 @@ Name:       harbour-syncthing-sf
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    SyncThing GUI
 Version:    0.1.3
-Release:    1
+Release:    2
 Group:      Qt/Qt
 License:    GPL3
 URL:        https://github.com/fuchsmich/syncthing-sf
