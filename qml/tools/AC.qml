@@ -33,21 +33,36 @@ import Sailfish.Silica 1.0
 
 Item {
 //    readonly property string stateFile: "/sys/class/power_supply/AC/online" //->SailEmu
-    readonly property string stateFile: "/sys/class/power_supply/AC/online" //->Jolla
-    property bool online: false
+    readonly property string dcStateFile: "/sys/class/power_supply/pm8921-dc/online" //->Jolla
+    readonly property string usbStateFile: "/sys/class/power_supply/usb/online" //->Jolla
+    property bool dcOnline: false
+    property bool usbOnline: false
+    property bool online: dcOnline || usbOnline
 
     function readState() {
-        var request =  new XMLHttpRequest();
-        request.open('GET', stateFile);
-        request.onreadystatechange = function(event) {
-            if (request.readyState === XMLHttpRequest.DONE) {
-//                console.log("AC state file", (request.responseText.trim() === "1"), online);
-                if (online !== (request.responseText.trim() === "1")) {
-                    online = (request.responseText.trim() === "1");
+        var dcRequest =  new XMLHttpRequest();
+        dcRequest.open('GET', dcStateFile);
+        dcRequest.onreadystatechange = function(event) {
+            if (dcRequest.readyState === XMLHttpRequest.DONE) {
+//                console.log("AC state file", (dcRequest.responseText.trim() === "1"), online);
+                if (dcOnline !== (dcRequest.responseText.trim() === "1")) {
+                    dcOnline = (dcRequest.responseText.trim() === "1");
                 }
             }
         }
-        request.send()
+        dcRequest.send()
+
+        var usbRequest =  new XMLHttpRequest();
+        usbRequest.open('GET', usbStateFile);
+        usbRequest.onreadystatechange = function(event) {
+            if (usbRequest.readyState === XMLHttpRequest.DONE) {
+//                console.log("AC state file", (usbRequest.responseText.trim() === "1"), online);
+                if (usbOnline !== (usbRequest.responseText.trim() === "1")) {
+                    usbOnline = (usbRequest.responseText.trim() === "1");
+                }
+            }
+        }
+        usbRequest.send()
     }
 
     Component.onCompleted: readState();

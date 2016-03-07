@@ -31,6 +31,8 @@ Page {
         showDotAndDotDot: false
         showDirsFirst: true
         rootFolder: page.rootFolder
+        sortField: FolderListModel.Time
+
     }
 
     SilicaListView {

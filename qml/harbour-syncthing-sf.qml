@@ -1,6 +1,5 @@
 /*
-  Copyright (C) 2013 Jolla Ltd.
-  Contact: Thomas Perl <thomas.perl@jollamobile.com>
+  Copyright (C) 2016 Michael Fuchs <michfu@gmx.at>
   All rights reserved.
 
   You may use this file under the terms of BSD license as follows:
@@ -49,14 +48,6 @@ ApplicationWindow
         }
         onStartStopWithWifiChanged: syncthingService.toggleServiceDueToState(startStopWithWifi, connmanWifi.wifiConnected);
         onStartStopWithACChanged: syncthingService.toggleServiceDueToState(startStopWithAC, ac.online);
-        Component.onCompleted: {
-//            console.log("los gehts");
-            if (startStopWithApp) syncthingService.start();
-        }
-        Component.onDestruction: {
-//            console.log("und tschü");
-            if (startStopWithApp) syncthingService.stop();
-        }
     }
 
     AC {
@@ -76,11 +67,22 @@ ApplicationWindow
         property bool readyToStart:
             (!sc.startStopWithWifi || (sc.startStopWithWifi && connmanWifi.wifiConnected)) &&
             (!sc.startStopWithAC || (sc.startStopWithAC && ac.online))
+        property bool startMeUp: false
+
+        onReadyToStartChanged: {
+            console.log("ReadyToStart", readyToStart);
+            if (startMeUp && readyToStart) {
+                start();
+                startMeUp = false;
+            }
+        }
+
 
         function refreshState() {
             state = getProperty("ActiveState")
         }
         function start() {
+            console.log("Starting", readyToStart);
             if (readyToStart && syncthingService.state != "active") {
                 syncthingService.call("Start", ["replace"]);
                 refreshState()
@@ -111,6 +113,14 @@ ApplicationWindow
             }
         }
 
+        Component.onCompleted: {
+            console.log("los gehts");
+            if (sc.startStopWithApp) syncthingService.startMeUp = true;
+        }
+        Component.onDestruction: {
+            console.log("und tschü");
+            if (sc.startStopWithApp) syncthingService.stop();
+        }
     }
 
 

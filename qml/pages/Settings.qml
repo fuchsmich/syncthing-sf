@@ -72,6 +72,7 @@ Page {
 //                horizontalAlignment: textAlignment
             }
             Label {
+                visible: false
                 enabled: false
                 x: Theme.paddingLarge
                 text: "Sync only on Following Interfaces"
