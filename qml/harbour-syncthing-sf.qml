@@ -35,14 +35,20 @@ import "pages"
 import org.nemomobile.dbus 2.0
 import SyncConnector 1.0
 
+import "tools"
+
 ApplicationWindow
 {
     id: app
 
     SyncConnector {
         id: sc
-        onStatusChanged: syncthingService.refreshState()
-        onStartStopWithWifiChanged: connman_wifi.toggleServiceDueToWifiState()
+        onStatusChanged: {
+            syncthingService.refreshState();
+            ac.readState();
+        }
+        onStartStopWithWifiChanged: syncthingService.toggleServiceDueToState(startStopWithWifi, connmanWifi.wifiConnected);
+        onStartStopWithACChanged: syncthingService.toggleServiceDueToState(startStopWithAC, ac.online);
         Component.onCompleted: {
 //            console.log("los gehts");
             if (startStopWithApp) syncthingService.start();
@@ -53,6 +59,12 @@ ApplicationWindow
         }
     }
 
+    AC {
+        id: ac
+        onOnlineChanged:
+            syncthingService.toggleServiceDueToState(sc.startStopWithAC, ac.online);
+    }
+
     DBusInterface {
         id: syncthingService
 
@@ -61,7 +73,9 @@ ApplicationWindow
         iface: "org.freedesktop.systemd1.Unit"
 
         property string state: getProperty("ActiveState")
-        property bool readyToStart: !sc.startStopWithWifi || (sc.startStopWithWifi && connman_wifi.wifiConnected)
+        property bool readyToStart:
+            (!sc.startStopWithWifi || (sc.startStopWithWifi && connmanWifi.wifiConnected)) &&
+            (!sc.startStopWithAC || (sc.startStopWithAC && ac.online))
 
         function refreshState() {
             state = getProperty("ActiveState")
@@ -85,11 +99,23 @@ ApplicationWindow
                         , ["replace"]);
             refreshState()
         }
+
+        function toggleServiceDueToState(active, state) {
+            if (active) {
+                if (!state) {
+                    syncthingService.stop()
+                }
+                if (state) {
+                    syncthingService.start()
+                }
+            }
+        }
+
     }
 
 
     DBusInterface {
-        id: connman_wifi
+        id: connmanWifi
         bus: DBus.SystemBus
         service: "net.connman"
 //        path: "/net/connman/technology/ethernet" //Emulator hat kein Wifi
@@ -97,22 +123,12 @@ ApplicationWindow
         iface: "net.connman.Technology"
 
         property bool wifiConnected
-        onWifiConnectedChanged: toggleServiceDueToWifiState();
-
-        function toggleServiceDueToWifiState() {
-            if (sc.startStopWithWifi) {
-                if (!wifiConnected) {
-                    syncthingService.stop()
-                }
-                if (wifiConnected) {
-                    syncthingService.start()
-                }
-            }
-        }
+        onWifiConnectedChanged:
+            syncthingService.toggleServiceDueToState(sc.startStopWithWifi, wifiConnected);
 
         signalsEnabled: true
         function propertyChanged(name, value) {
-            console.log(name, value)
+//            console.log(name, value)
             if (name === "Connected") {
                 wifiConnected = value
             }

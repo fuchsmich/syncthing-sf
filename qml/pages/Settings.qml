@@ -1,6 +1,6 @@
 /*
-  Copyright (C) 2013 Jolla Ltd.
-  Contact: Thomas Perl <thomas.perl@jollamobile.com>
+  Copyright (C) 2016 Michael Fuchs
+  Contact: Michael Fuchs <michfu@gmx.at>
   All rights reserved.
 
   You may use this file under the terms of BSD license as follows:
@@ -63,6 +63,7 @@ Page {
 //                horizontalAlignment: textAlignment
             }
             TextField {
+                visible: false
                 enabled: swStart.checked
                 width: parent.width
 //                readOnly: true
@@ -79,11 +80,13 @@ Page {
                 //                font.pixelSize: Theme.fontSizeExtraLarge
             }
             TextSwitch {
+                visible: false
                 enabled: false
                 text: "WLAN"
                 checked: true
             }
             TextSwitch {
+                visible: false
                 enabled: false
                 text: "Mobile Internet"
                 checked: true

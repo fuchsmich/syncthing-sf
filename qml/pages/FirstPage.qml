@@ -79,10 +79,17 @@ Page {
             }
             TextSwitch {
                 x: Theme.paddingLarge
-                text: "Start/stop service with Wifi-connection"
-                description: "Wifi status: " + (connman_wifi.wifiConnected ? "connected" : "not connected")
+                text: "start/stop service with Wifi connection"
+                description: "Wifi state: " + (connmanWifi.wifiConnected ? "connected" : "not connected")
                 checked: sc.startStopWithWifi
                 onCheckedChanged: sc.startStopWithWifi = checked
+            }
+            TextSwitch {
+                x: Theme.paddingLarge
+                text: "start/stop service with AC connection"
+                description: "AC state: " + (ac.online ? "connected" : "not connected")
+                checked: sc.startStopWithAC
+                onCheckedChanged: sc.startStopWithAC = checked
             }
 
 

@@ -29,7 +29,8 @@ DISTFILES += \
     qml/pages/FolderDelegate.qml \
     harbour-syncthing-sf.desktop \
     rpm/harbour-syncthing-sf.yaml \
-    rpm/harbour-syncthing-sf.spec
+    rpm/harbour-syncthing-sf.spec \
+    qml/tools/AC.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 
@@ -44,5 +45,5 @@ INSTALLS += service
 
 INSTALLS += syncthing
   syncthing.path = /usr/share/harbour-syncthing-sf/libexec
-  syncthing.files = syncthing.net/386/syncthing  #emulator
-#  syncthing.files = syncthing.net/arm/syncthing  #jolla
+#  syncthing.files = syncthing.net/386/syncthing  #emulator
+  syncthing.files = syncthing.net/arm/syncthing  #jolla
