@@ -32,7 +32,8 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 Item {
-    readonly property string stateFile: "/sys/class/power_supply/AC/online"
+//    readonly property string stateFile: "/sys/class/power_supply/AC/online" //->SailEmu
+    readonly property string stateFile: "/sys/class/power_supply/AC/online" //->Jolla
     property bool online: false
 
     function readState() {
