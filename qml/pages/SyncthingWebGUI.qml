@@ -52,14 +52,16 @@ Page {
             bottom: parent.bottom
         }
 
-//        experimental.itemSelector: ContextMenu {
+        experimental.itemSelector:
+//        ContextMenu {
 //            property QtObject selectorModel: model
 //            onClicked: selectorModel.reject()
 //            Repeater {
 //                model: parent.selectorModel
 //                MenuItem { text: index }
 //            }
-//        } //ItemSelector { }
+//        }
+        SilicaItemSelector { }
 
         Component.onCompleted: console.log(url)
     }
