@@ -32,7 +32,6 @@ DISTFILES += \
     rpm/harbour-syncthing-sf.spec \
     qml/tools/AC.qml \
     qml/pages/SyncthingWebGUI.qml \
-    qml/tools/ItemSelector.qml \
     qml/tools/SilicaItemSelector.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256

@@ -30,37 +30,51 @@ import Sailfish.Silica 1.0
 
 
 Item {
-anchors.fill: parent
-property QtObject selectorModel: model
-
-SilicaListView {
-    id: view
-    model: selectorModel.items
+    id: selectorItem
     anchors.fill: parent
-    delegate: BackgroundItem {
-        id: delegateItem
-        onClicked: {
-            selectorModel.accept(model.index)
-            view.destroy()
-        }
-        Label {
-            x: Theme.horizontalPageMargin
-            anchors.verticalCenter: parent.verticalCenter
-            width: parent.width - x*2
-            wrapMode: Text.Wrap
-            text: model.text
-            color: (delegateItem.highlighted || model.item === selectorModel.currentItem)
-                   ? Theme.highlightColor
-                   : Theme.primaryColor
-        }
-    }
-    VerticalScrollDecorator {}
+    property QtObject selectorModel: model
 
     Component.onCompleted: {
-        console.log(selectorModel)
+        pageStack.push(menuDialogComponent)
     }
 
-}
+    Component {
+        id: menuDialogComponent
+
+        Page {
+
+
+            SilicaListView {
+                id: view
+                model: selectorModel.items
+                anchors.fill: parent
+                delegate: BackgroundItem {
+                    id: delegateItem
+                    onClicked: {
+                        selectorModel.accept(model.index)
+                        pageStack.pop()
+//                        selectorItem.destroy()
+                    }
+                    Label {
+                        x: Theme.horizontalPageMargin
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: parent.width - x*2
+                        wrapMode: Text.Wrap
+                        text: model.text
+                        color: (delegateItem.highlighted || model.item === selectorModel.currentItem)
+                               ? Theme.highlightColor
+                               : Theme.primaryColor
+                    }
+                }
+                VerticalScrollDecorator {}
+
+                Component.onCompleted: {
+                    console.log(selectorModel)
+                }
+
+            }
+        }
+    }
 }
 
 //MouseArea {

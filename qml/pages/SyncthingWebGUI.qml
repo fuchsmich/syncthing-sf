@@ -36,6 +36,7 @@ Page {
     property alias url: wv.url
 
     Row {
+        x: Theme.horizontalPageMargin
         id: buttons
         IconButton {
             icon.source: "image://theme/icon-m-sync"
@@ -53,14 +54,6 @@ Page {
         }
 
         experimental.itemSelector:
-//        ContextMenu {
-//            property QtObject selectorModel: model
-//            onClicked: selectorModel.reject()
-//            Repeater {
-//                model: parent.selectorModel
-//                MenuItem { text: index }
-//            }
-//        }
         SilicaItemSelector { }
 
         Component.onCompleted: console.log(url)
