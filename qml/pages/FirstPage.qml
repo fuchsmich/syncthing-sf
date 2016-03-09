@@ -1,6 +1,5 @@
 /*
-  Copyright (C) 2013 Jolla Ltd.
-  Contact: Thomas Perl <thomas.perl@jollamobile.com>
+  Copyright (C) 2016 Michael Fuchs <michfu@gmx.at>
   All rights reserved.
 
   You may use this file under the terms of BSD license as follows:
@@ -52,8 +51,13 @@ Page {
                 onClicked: pageStack.push(Qt.resolvedUrl("Settings.qml"))
             }
             MenuItem {
+                enabled: (syncthingService.state == "active")
                 text: qsTr("SyncThing Web UI")
-                onClicked: Qt.openUrlExternally(sc.guiUrl)
+//                onClicked: Qt.openUrlExternally(sc.guiUrl)
+                onClicked: {
+                    console.log(sc.guiUrl)
+                    pageStack.push(Qt.resolvedUrl("SyncthingWebGUI.qml"), {url: sc.guiUrl})
+                }
             }
         }
 

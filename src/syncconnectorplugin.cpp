@@ -13,7 +13,7 @@ SyncConnectorPlugin::SyncConnectorPlugin(QObject *parent) : QObject(parent)
 
 QQuickSyncConnector::QQuickSyncConnector(QObject *parent)
     : QObject(parent)
-    , mpSyncConnector(new qst::connector::SyncConnector(QUrl(tr("http://127.0.0.1:8384"))))
+    , mpSyncConnector(new qst::connector::SyncConnector(QUrl(tr("http://127.0.0.1:8384/"))))
     , mSettings("fuxl", "QSyncthingTray")
     , mSettingsLoaded(false)
 
@@ -214,7 +214,7 @@ void QQuickSyncConnector::loadSettings()
     setGuiUrl(mSettings.value("url").toString());
     if (mCurrentUrl.toString().length() == 0)
     {
-        setGuiUrl(tr("http://127.0.0.1:8384"));
+        setGuiUrl(tr("http://127.0.0.1:8384/"));
     }
     mCurrentUserPassword = mSettings.value("userpassword").toString().toStdString();
     mCurrentUserName = mSettings.value("username").toString().toStdString();
@@ -228,7 +228,7 @@ void QQuickSyncConnector::loadSettings()
 
 void QQuickSyncConnector::createDefaultSettings()
 {
-    mSettings.setValue("url", tr("http://127.0.0.1:8384"));
+    mSettings.setValue("url", tr("http://127.0.0.1:8384/"));
     mSettings.setValue("startStopWithWifi", true);
     mSettings.setValue("startStopWithApp", false);
     mSettings.setValue("startStopWithAC", false);
