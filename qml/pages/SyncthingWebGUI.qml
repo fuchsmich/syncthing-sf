@@ -28,6 +28,7 @@
 */
 
 import QtQuick 2.0
+import QtQuick.Layouts 1.1
 import Sailfish.Silica 1.0
 import "../tools"
 
@@ -35,9 +36,17 @@ Page {
     id: page
     property alias url: wv.url
 
-    Row {
+    RowLayout {
         x: Theme.horizontalPageMargin
+        anchors.right: parent.right
         id: buttons
+        Label {
+            Layout.fillWidth: true
+            text: wv.title
+            verticalAlignment: Text.AlignVCenter
+            height: parent.height
+        }
+
         IconButton {
             icon.source: "image://theme/icon-m-sync"
             onClicked: wv.reload
