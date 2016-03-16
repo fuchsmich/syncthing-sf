@@ -104,6 +104,10 @@ public:
         saveSettings();
     }
 
+    Q_INVOKABLE void copyBinToHome();
+    Q_INVOKABLE void setBinPath(bool toHome);
+
+
 signals:
     void foldersChanged();
     void filesChanged();
@@ -143,6 +147,9 @@ private:
 
     QSettings mSettings;
     bool mSettingsLoaded;
+
+    QSettings mServiceUnit;
+    void loadServiceUnitFile();
 
     bool mStartStopWithWifi;
     bool mStartStopWithApp;
