@@ -89,8 +89,6 @@ namespace connector
     LastSyncedFileList getLastSyncedFiles();
     void pauseSyncthing(bool paused);
 //    SyncWebView *getWebView();
-    Q_INVOKABLE void copyBinToHome();
-    Q_INVOKABLE void setBinPath(bool toHome);
 
   signals:
     void onConnectionHealthChanged(ConnectionHealthStatus healthState);

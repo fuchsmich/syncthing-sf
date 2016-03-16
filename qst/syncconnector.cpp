@@ -285,29 +285,6 @@ void SyncConnector::pauseSyncthing(bool paused)
 
 //------------------------------------------------------------------------------------//
 
-void SyncConnector::copyBinToHome()
-{
-    QDir binPath = QDir(QDir::homePath() + "/.local/syncthing-sf/libexec");
-    QFile homeBinary = QFile(binPath + "/syncthing");
-    if (!homeBinary.exists()) {
-        if (!binPath.exists())
-            if (!binDir.mkpath(",")) return;
-        QFile::copy ("/usr/share/syncthing-sf/libexec/syncthing", homeBinary);
-    }
-
-}
-
-//------------------------------------------------------------------------------------//
-
-void SyncConnector::setBinPath(bool toHome)
-{
-
-
-}
-
-
-//------------------------------------------------------------------------------------//
-
 void SyncConnector::shutdownSyncthingProcess()
 {
     QUrl requestUrl = mCurrentUrl;
