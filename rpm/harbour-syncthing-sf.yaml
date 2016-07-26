@@ -1,7 +1,7 @@
 Name: harbour-syncthing-sf
 Summary: SyncThing GUI
-Version: 0.1.4
-Release: 4
+Version: 0.1.99
+Release: 0
 # The contents of the Group field should be one of the groups listed here:
 # http://gitorious.org/meego-developer-tools/spectacle/blobs/master/data/GROUPS
 Group: Qt/Qt
@@ -32,7 +32,8 @@ PkgConfigBR:
 
 # Runtime dependencies which are not automatically detected
 Requires:
-  - sailfishsilica-qt5 >= 0.10.9 
+  - sailfishsilica-qt5 >= 0.10.9
+#  - syncthing >= 0.12 #TODO muss noch erstellt werden
 
 # All installed files
 Files:
