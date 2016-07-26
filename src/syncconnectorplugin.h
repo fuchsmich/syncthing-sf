@@ -104,8 +104,8 @@ public:
         saveSettings();
     }
 
-    Q_INVOKABLE void copyBinToHome();
-    Q_INVOKABLE void setBinPath(bool toHome);
+//    Q_INVOKABLE void copyBinToHome();
+//    Q_INVOKABLE void setBinPath(bool toHome);
 
 
 signals:
