@@ -53,11 +53,11 @@ Page {
             MenuItem {
                 enabled: (syncthingService.state == "active")
                 text: qsTr("SyncThing Web UI")
-//                onClicked: Qt.openUrlExternally(sc.guiUrl)
-                onClicked: {
-                    console.log(sc.guiUrl)
-                    pageStack.push(Qt.resolvedUrl("SyncthingWebGUI.qml"), {url: sc.guiUrl})
-                }
+                onClicked: Qt.openUrlExternally(sc.guiUrl)
+//                onClicked: {
+//                    console.log(sc.guiUrl)
+//                    pageStack.push(Qt.resolvedUrl("SyncthingWebGUI.qml"), {url: sc.guiUrl})
+//                }
             }
         }
 

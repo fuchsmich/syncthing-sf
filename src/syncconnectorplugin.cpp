@@ -16,7 +16,7 @@ QQuickSyncConnector::QQuickSyncConnector(QObject *parent)
     , mpSyncConnector(new qst::connector::SyncConnector(QUrl(tr("http://127.0.0.1:8384/"))))
     , mSettings("fuxl", "QSyncthingTray")
     , mSettingsLoaded(false)
-    , mServiceUnit(QDir::homePath + "/.config/systemd/user/syncting.service", QSettings::IniFormat)
+    //, mServiceUnit(QDir::homePath + "/.config/systemd/user/syncting.service", QSettings::IniFormat)
 
 {
     loadSettings();
@@ -144,24 +144,24 @@ void QQuickSyncConnector::updateConnectionHealth(ConnectionHealthStatus status)
 
 //------------------------------------------------------------------------------------//
 
-void QQuickSyncConnector::copyBinToHome()
-{
-    QDir binPath = QDir(QDir::homePath() + "/.local/syncthing-sf/libexec");
-    QFile homeBinary = QFile(binPath + "/syncthing");
-    if (!homeBinary.exists()) {
-        if (!binPath.exists())
-            if (!binDir.mkpath(",")) return;
-        QFile::copy ("/usr/share/syncthing-sf/libexec/syncthing", homeBinary);
-    }
+//void QQuickSyncConnector::copyBinToHome()
+//{
+//    QDir binPath = QDir(QDir::homePath() + "/.local/syncthing-sf/libexec");
+//    QFile homeBinary = QFile(binPath + "/syncthing");
+//    if (!homeBinary.exists()) {
+//        if (!binPath.exists())
+//            if (!binDir.mkpath(",")) return;
+//        QFile::copy ("/usr/share/syncthing-sf/libexec/syncthing", homeBinary);
+//    }
 
-}
+//}
 
 //------------------------------------------------------------------------------------//
 
-void QQuickSyncConnector::setBinPath(bool toHome)
-{
+//void QQuickSyncConnector::setBinPath(bool toHome)
+//{
 
-}
+//}
 
 //------------------------------------------------------------------------------------//
 
