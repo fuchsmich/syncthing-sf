@@ -30,6 +30,7 @@
 //#include <QMessageBox>
 //#include "window.h"
 
+// settings für qml: https://lists.sailfishos.org/pipermail/devel/2013-December/002321.html
 
 int main(int argc, char *argv[])
 {
