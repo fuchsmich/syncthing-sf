@@ -70,7 +70,7 @@ Page {
                 title: qsTr("SyncThing")
             }
             SectionHeader {
-                text: qsTr("Service")
+                text: qsTr("Controller")
             }
             Button {
                 text: syncthingService.state //!= "active" ? "Start" : "Stop"
