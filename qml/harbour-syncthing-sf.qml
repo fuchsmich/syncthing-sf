@@ -50,6 +50,10 @@ ApplicationWindow
         onStartStopWithACChanged: syncthingService.toggleServiceDueToState(startStopWithAC, ac.online);
     }
 
+    SyncthingRESTAPI {
+        id: stra
+    }
+
     AC {
         id: ac
         onOnlineChanged:
