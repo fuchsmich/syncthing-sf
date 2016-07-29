@@ -30,6 +30,7 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import '../items' as MyItems
 
 
 
@@ -50,6 +51,10 @@ Page {
             MenuItem {
                 text: qsTr("Settings")
                 onClicked: pageStack.push(Qt.resolvedUrl("Settings.qml"))
+            }
+            MenuItem {
+                text: qsTr("Show ID")
+                onClicked: ;
             }
             MenuItem {
                 text: qsTr("SyncThing Web UI")
@@ -94,88 +99,75 @@ Page {
 
 
             SectionHeader {
-                text: qsTr("Service")
+                text: qsTr("Service - State")
             }
-            Label {
-                x: Theme.paddingLarge
-                text: qsTr("Status")
-                color: Theme.secondaryHighlightColor
-                font.pixelSize: Theme.fontSizeExtraLarge
+            DetailItem {
+                label: qsTr("Status")
+                value: (stra.connections.json['total']['connected'] ? qsTr('connected') : qsTr('not connected'))
             }
-            Row {
-                x: Theme.paddingLarge
-                spacing: Theme.paddingLarge
-                Label {
-                    text: sc.status
-                }
-                Label {
-                    text: sc.numberOfConnections
-                }
+            DetailItem {
+                label: qsTr("Client Version")
+                value: (stra.systemVersion.json['version'])
+            }
+            DetailItem {
+                label: qsTr("Connections")
+                value: stra.connections.devConnected + "/" + stra.connections.devTot
             }
             Row {
-                x: Theme.paddingLarge
-                spacing: Theme.paddingLarge
-                Label {
-                    text: sc.trafficIn
-                    font.pixelSize: Theme.fontSizeTiny
+                //                x: Theme.paddingLarge
+                //                spacing: Theme.paddingLarge
+                width: parent.width
+                height: dti.height
+                MyItems.DetailItem {
+                    id: dti
+                    width: parent.width/2
+                    label: "In"
+                    value: stra.connections.formatBytes(stra.connections.inBytesTotalRate)
+                           + "/s (" + stra.connections.formatBytes(stra.connections.inBytesTotal) + ")"
+                    fontPixelSize: Theme.fontSizeTiny
                 }
-                Label {
-                    text: sc.trafficOut
-                    font.pixelSize: Theme.fontSizeTiny
-                }
-                Label {
-                    x: Theme.paddingLarge
-                    text: sc.trafficTot
-                    font.pixelSize: Theme.fontSizeTiny
+                MyItems.DetailItem {
+                    width: parent.width/2
+                    label: "Out"
+                    value: stra.connections.formatBytes(stra.connections.outBytesTotalRate)
+                           + "/s (" + stra.connections.formatBytes(stra.connections.outBytesTotal) + ")"
+                    fontPixelSize: Theme.fontSizeTiny
                 }
             }
-            Label {
-                x: Theme.paddingLarge
+            SectionHeader {
                 text: qsTr("Shared Folders")
-                color: Theme.secondaryHighlightColor
-                font.pixelSize: Theme.fontSizeExtraLarge
             }
             Repeater {
-                model: sc.folders
-//                BackgroundItem {
-//                    width: column.width
-//                    Label {
-//                        x: Theme.paddingLarge
-//                        text: modelData.name
-//                        verticalAlignment: Text.AlignVCenter
-//                    }
-//                }
-                FolderDelegate {
-                    x: Theme.paddingLarge
-                    text: modelData.name
-                    iconSource: "image://theme/icon-m-folder"
-                    onClicked: {
-                        fp.selectedFolder = modelData.path
-                        pageStack.push(Qt.resolvedUrl("FileBrowser.qml"), {rootFolder: modelData.path})
-                    }
-                }
-            }
-            Label {
-                x: Theme.paddingLarge
-                text: qsTr("Last Synced Files")
-                color: Theme.secondaryHighlightColor
-                font.pixelSize: Theme.fontSizeExtraLarge
-            }
-            Repeater {
-                model: sc.files
-                FolderDelegate {
-                    x: Theme.paddingLarge
-                    text: modelData.name
-                    iconSource: "image://theme/icon-m-document"
-                    highlighted: !modelData.deleted
-                    onClicked: {
-                        if (!modelData.deleted) {
-                            fp.selectedFolder = modelData.path
-                            pageStack.push(Qt.resolvedUrl("FileBrowser.qml"), {rootFolder: modelData.path})
+                model: stra.folderModel
+                Column {
+                    width: page.width
+                    FolderDelegate {
+                        x: Theme.paddingLarge
+                        text: ( name === '' ? folderID : name)
+                        iconSource: "image://theme/icon-m-folder"
+                        onClicked: {
+                            fp.selectedFolder = path
+                            pageStack.push(Qt.resolvedUrl("FileBrowser.qml"), {rootFolder: path})
                         }
                     }
+                    MyItems.DetailItem {
+                        label: "Last File"
+                        value: stra.statsFolder.json[folderId]['lastFile']['filename']
+                        fontPixelSize: Theme.fontSizeTiny
+                    }
+                    MyItems.DetailItem {
+                        label: "Completed"
+                        value: "XX %"
+                        fontPixelSize: Theme.fontSizeTiny
+                    }
                 }
             }
+//            SectionHeader {
+//                //                x: Theme.paddingLarge
+//                text: qsTr("Last Synced Files")
+//                //                color: Theme.secondaryHighlightColor
+//                //                font.pixelSize: Theme.fontSizeExtraLarge
+//            }
         }
     }
 }

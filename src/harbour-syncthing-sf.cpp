@@ -21,9 +21,12 @@
 //#endif
 
 #include <sailfishapp.h>
+#include <QQmlApplicationEngine>
+
+#include <QStandardPaths>
+#include <QQmlContext>
 
 #include "syncconnectorplugin.h"
-
 
 //#include <QApplication>
 
@@ -36,9 +39,21 @@ int main(int argc, char *argv[])
 {
 //    Q_INIT_RESOURCE(qsyncthing);
 
-//    QApplication app(argc, argv);
-
     qmlRegisterType<QQuickSyncConnector>("SyncConnector", 1, 0, "SyncConnector");
-    return SailfishApp::main(argc, argv);
+
+    QGuiApplication *app = SailfishApp::application(argc, argv);
+    QQuickView *view = SailfishApp::createView();
+
+    QUrl genericConfigPath;
+    const QStringList genericConfigLocations = QStandardPaths::standardLocations(QStandardPaths::GenericConfigLocation);
+
+    if (genericConfigLocations.isEmpty()) genericConfigPath = QUrl(".");
+    else genericConfigPath = QString("%1").arg(genericConfigLocations.first());
+
+    view->rootContext()->setContextProperty("genericConfigPath", genericConfigPath);
+    view->setSource(SailfishApp::pathTo("qml/harbour-syncthing-sf.qml"));
+    view->showFullScreen();
+
+    return app->exec();
 
 }

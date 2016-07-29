@@ -118,7 +118,7 @@ ApplicationWindow
         }
 
         Component.onCompleted: {
-            console.log("los gehts");
+            console.log("los gehts", genericConfigPath);
             if (sc.startStopWithApp) syncthingService.startMeUp = true;
         }
         Component.onDestruction: {
@@ -132,8 +132,8 @@ ApplicationWindow
         id: connmanWifi
         bus: DBus.SystemBus
         service: "net.connman"
-//        path: "/net/connman/technology/ethernet" //Emulator hat kein Wifi
-        path: "/net/connman/technology/wifi" //<--- richtiger Pfad am Jolla
+        path: "/net/connman/technology/ethernet" //Emulator hat kein Wifi
+//        path: "/net/connman/technology/wifi" //<--- richtiger Pfad am Jolla
         iface: "net.connman.Technology"
 
         property bool wifiConnected
