@@ -130,7 +130,7 @@ Item {
             }
             outBytesTotal = obt;
             devConnected = 0;
-            devTot = 0;
+            devTot = -1;
             for (var i in json['connections']) {
                 devTot++;
                 if (json['connections'][i]['connected'] === true) devConnected++;
