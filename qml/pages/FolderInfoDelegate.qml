@@ -15,6 +15,10 @@ Page {
             label: "ID"
             value: fid
         }
+        DetailItem{
+            label: "Sync Completion"
+            value: fid
+        }
 
     }
 }
