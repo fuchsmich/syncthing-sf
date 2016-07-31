@@ -7,6 +7,8 @@ Item {
     property string guiUrl: 'http://localhost:8384'
     property string apiKey: '' //: '0KtQMct7bdCeSI6nE08UE-AP2y-jxges'
     property string myId: ''
+    property string appConfigPath: ''
+
 
     signal refreshEndpoints();
 
@@ -14,13 +16,13 @@ Item {
         id: timer
         interval: 2000
         repeat: true
-//        onTriggered: refreshEndpoints();//refresh();
+        onTriggered: stop();
     }
 
 
     XmlListModel {
         id: apiKeyModel
-        source: "file://" + genericConfigPath + '/syncthing/config.xml'
+        source: "file://" + appConfigPath + '/syncthing/config.xml'
         query: "/configuration/gui"
         XmlRole { name: "key"; query: "apikey/string()"}
         onStatusChanged: {

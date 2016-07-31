@@ -40,24 +40,33 @@ ApplicationWindow
 {
     id: app
 
-    SyncConnector {
-        id: sc
-        onStatusChanged: {
-            syncthingService.refreshState();
-            ac.readState();
-        }
-        onStartStopWithWifiChanged: syncthingService.toggleServiceDueToState(startStopWithWifi, connmanWifi.wifiConnected);
-        onStartStopWithACChanged: syncthingService.toggleServiceDueToState(startStopWithAC, ac.online);
-    }
+//    SyncConnector {
+//        id: sc
+//        onStatusChanged: {
+//            syncthingService.refreshState();
+//            ac.readState();
+//        }
+//        onStartStopWithWifiChanged: syncthingService.toggleServiceDueToState(startStopWithWifi, connmanWifi.wifiConnected);
+//        onStartStopWithACChanged: syncthingService.toggleServiceDueToState(startStopWithAC, ac.online);
+//    }
 
     SyncthingRESTAPI {
         id: stra
+        appConfigPath: genericConfigPath
+        Component.onCompleted: console.log("stdpath", StandardPaths.genericData);
     }
 
     AC {
         id: ac
         onOnlineChanged:
-            syncthingService.toggleServiceDueToState(sc.startStopWithAC, ac.online);
+            syncthingService.toggleServiceDueToState(settings.startStopWithAC, ac.online);
+    }
+
+    Item {
+        id: settings
+        property bool startStopWithAC: false
+        property bool startStopWithWifi: false
+        property bool startStopWithApp: false
     }
 
     DBusInterface {
@@ -69,8 +78,8 @@ ApplicationWindow
 
         property string state: getProperty("ActiveState")
         property bool readyToStart:
-            (!sc.startStopWithWifi || (sc.startStopWithWifi && connmanWifi.wifiConnected)) &&
-            (!sc.startStopWithAC || (sc.startStopWithAC && ac.online))
+            (!settings.startStopWithWifi || (settings.startStopWithWifi && connmanWifi.wifiConnected)) &&
+            (!settings.startStopWithAC || (settings.startStopWithAC && ac.online))
         property bool startMeUp: false
 
         onReadyToStartChanged: {
@@ -118,12 +127,12 @@ ApplicationWindow
         }
 
         Component.onCompleted: {
-            console.log("los gehts", genericConfigPath);
-            if (sc.startStopWithApp) syncthingService.startMeUp = true;
+            console.log("los gehts");
+            if (settings.startStopWithApp) syncthingService.startMeUp = true;
         }
         Component.onDestruction: {
             console.log("und tschü");
-            if (sc.startStopWithApp) syncthingService.stop();
+            if (settings.startStopWithApp) syncthingService.stop();
         }
     }
 
@@ -138,7 +147,7 @@ ApplicationWindow
 
         property bool wifiConnected
         onWifiConnectedChanged:
-            syncthingService.toggleServiceDueToState(sc.startStopWithWifi, wifiConnected);
+            syncthingService.toggleServiceDueToState(settings.startStopWithWifi, wifiConnected);
 
         signalsEnabled: true
         function propertyChanged(name, value) {

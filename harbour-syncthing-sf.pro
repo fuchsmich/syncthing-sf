@@ -3,19 +3,19 @@ TARGET = harbour-syncthing-sf
 CONFIG += sailfishapp
 CONFIG += c++11
 
-HEADERS       =     src/syncconnectorplugin.h
-SOURCES       =   src/syncconnectorplugin.cpp \
-    src/harbour-syncthing-sf.cpp
+SOURCES       =   src/harbour-syncthing-sf.cpp
+#HEADERS +=     src/syncconnectorplugin.h
+#SOURCES +=   src/syncconnectorplugin.cpp
 
-HEADERS += qst/syncconnector.h \
-    qst/platforms/darwin/macUtils.hpp \
-    qst/platforms/windows/winUtils.hpp \
-    qst/platforms/linux/posixUtils.hpp \
-    qst/platforms.hpp \
-    qst/apihandler.hpp \
-    qst/utilities.hpp
+#HEADERS += qst/syncconnector.h \
+#    qst/platforms/darwin/macUtils.hpp \
+#    qst/platforms/windows/winUtils.hpp \
+#    qst/platforms/linux/posixUtils.hpp \
+#    qst/platforms.hpp \
+#    qst/apihandler.hpp \
+#    qst/utilities.hpp
 
-SOURCES += qst/syncconnector.cpp
+#SOURCES += qst/syncconnector.cpp
 
 #QT += widgets
 QT += network
@@ -33,7 +33,9 @@ DISTFILES += \
     qml/tools/AC.qml \
     qml/tools/SyncthingRESTAPI.qml \
     qml/tools/RestEndpoint.qml \
-    qml/items/DetailItem.qml
+    qml/items/DetailItem.qml \
+    qml/items/FolderDelegate.qml \
+    qml/pages/FolderInfoDelegate.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 
