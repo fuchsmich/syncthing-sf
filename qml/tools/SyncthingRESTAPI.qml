@@ -75,13 +75,18 @@ Item {
     property RestEndpoint status: RestEndpoint {
         apiKey: root.apiKey
         source: guiUrl + '/rest/system/status'
-        onJsonChanged: myId = json['myID']
+        onJsonChanged: {
+            myId = json['myID'];
+            console.log(myId);
+        }
     }
 
     property RestEndpoint config: RestEndpoint {
         apiKey: root.apiKey
         source: guiUrl + '/rest/system/config'
-        onJsonChanged: folderModel.getFolders();
+        onJsonChanged: {
+            folderModel.getFolders();
+        }
     }
 
     property RestEndpoint statsFolder: RestEndpoint {

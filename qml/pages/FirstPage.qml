@@ -25,7 +25,7 @@ Page {
             }
             MenuItem {
                 text: qsTr("Show ID")
-                onClicked: ;
+                onClicked: pageStack.push(Qt.resolvedUrl("MyID.qml"));
             }
             MenuItem {
                 text: qsTr("SyncThing Web UI")

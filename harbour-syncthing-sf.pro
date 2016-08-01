@@ -35,7 +35,11 @@ DISTFILES += \
     qml/tools/RestEndpoint.qml \
     qml/items/DetailItem.qml \
     qml/items/FolderDelegate.qml \
-    qml/pages/FolderInfoDelegate.qml
+    qml/pages/FolderInfoDelegate.qml \
+    qml/pages/MyID.qml \
+    qml/qqr/qqr.js \
+    qml/qqr/qmldir \
+    qml/qqr/QRCode.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 
