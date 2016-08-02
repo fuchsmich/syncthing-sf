@@ -5,7 +5,7 @@ Item {
     id: stra
     readonly property string restVersion: '0.14'
     property string guiUrl: 'http://localhost:8384'
-    property string apiKey: '' //: '0KtQMct7bdCeSI6nE08UE-AP2y-jxges'
+    property string apiKey: ''
     property bool connected: false
     property string myId: ''
     property string appConfigPath: ''
@@ -128,7 +128,6 @@ Item {
         property real outBytesTotal: 0 //bytes sent
         property real outBytesTotalRate: 0 //b/s sent
         onJsonChanged: {
-            //TODO Werte zurücksetzen, wenn json nicht geladen
             if (json['total']) {
                 var ibt = json['total']['inBytesTotal']
                 if (typeof inBytesTotal !== 'undefined') {

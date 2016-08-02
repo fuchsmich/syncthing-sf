@@ -29,26 +29,15 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import "pages"
-
 import org.nemomobile.dbus 2.0
-//import SyncConnector 1.0
 
+import "pages"
 import "tools"
 
 ApplicationWindow
 {
     id: app
 
-//    SyncConnector {
-//        id: sc
-//        onStatusChanged: {
-//            syncthingService.refreshState();
-//            ac.readState();
-//        }
-//        onStartStopWithWifiChanged: syncthingService.toggleServiceDueToState(startStopWithWifi, connmanWifi.wifiConnected);
-//        onStartStopWithACChanged: syncthingService.toggleServiceDueToState(startStopWithAC, ac.online);
-//    }
 
     SyncthingRESTAPI {
         id: stra
@@ -63,6 +52,7 @@ ApplicationWindow
     }
 
     Item {
+        //TODO Settings implementieren
         id: settings
         property bool startStopWithAC: false
         property bool startStopWithWifi: false
@@ -70,6 +60,7 @@ ApplicationWindow
     }
 
     DBusInterface {
+        //TODO Systemd in eigene Component in /tools
         id: syncthingService
 
         service: "org.freedesktop.systemd1"
