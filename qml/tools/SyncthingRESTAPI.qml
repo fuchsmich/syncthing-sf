@@ -1,3 +1,5 @@
+//TODO Abfragen mit States herstellen? Für Frontpage, Devices, Folder, ...
+
 import QtQuick 2.0
 import QtQuick.XmlListModel 2.0
 
@@ -34,6 +36,11 @@ Item {
     }
 
     onApiKeyChanged: if (apiKey !== '') timer.start();
+    onConnectedChanged: {
+        if (connected) {
+
+        }
+    }
     
     function getName4ID(id) {
         var devices = config['devices']
@@ -48,8 +55,8 @@ Item {
         source: guiUrl + '/rest/system/ping'
         onJsonChanged: {
 //            console.log("cc", JSON.stringify(json));
-            if (error === '' && json["ping"] === "pong") connected = true;
-            else connected = false;
+            if (json["ping"] === "pong" && !connected) connected = true;
+            else if (connected) connected = false;
         }
         onErrorChanged: console.log("ccerror", error)
         Connections {
@@ -59,7 +66,7 @@ Item {
     }
 
 
-    property RestEndpoint systemVersion: RestEndpoint {
+    property RestEndpoint version: RestEndpoint {
         apiKey: stra.apiKey
         source: guiUrl + '/rest/system/version'
     }
@@ -70,11 +77,11 @@ Item {
         onJsonChanged: {
             if (json['myID']) myId = json['myID'];
             else myId = '';
-            console.log(myId);
+//            console.log(myId);
         }
         Connections {
-            target: stra
-            onConnectedChanged: if (stra.connected) parent.refresh();
+            target: timer
+            onTriggered:  if (stra.connected) status.refresh();
         }
     }
 
@@ -86,7 +93,7 @@ Item {
         }
         Connections {
             target: stra
-            onConnectedChanged: if (stra.connected) parent.refresh();
+            onConnectedChanged: if (stra.connected) config.refresh();
         }
     }
 
@@ -167,7 +174,7 @@ Item {
         }
         Connections {
             target: timer
-            onTriggered: connections.refresh();
+            onTriggered: if (connected) connections.refresh();
         }
     }
 }
