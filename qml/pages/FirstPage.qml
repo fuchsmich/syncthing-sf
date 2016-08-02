@@ -26,10 +26,12 @@ Page {
             MenuItem {
                 text: qsTr("Show ID")
                 onClicked: pageStack.push(Qt.resolvedUrl("MyID.qml"));
+                enabled: stra.connected
             }
             MenuItem {
                 text: qsTr("SyncThing Web UI")
                 onClicked: Qt.openUrlExternally(stra.guiUrl)
+                enabled: stra.connected
             }
         }
 
@@ -77,17 +79,18 @@ Page {
                 text: qsTr("Service - State")
             }
             DetailItem {
-                visible: false
+//                visible: false
                 label: qsTr("Status")
-                value: (stra.connections.json['total']['connected'] ? qsTr('connected') : qsTr('not connected'))
+                value: (stra.connected ? qsTr('connected') : qsTr('not connected'))
             }
             DetailItem {
-                visible: false
+//                visible: false
+                enabled: stra.connected
                 label: qsTr("Client Version")
-                value: (stra.systemVersion.json['version'])
+                value: (stra.connected ? stra.systemVersion.json['version']:'')
             }
             DetailItem {
-                visible: false
+//                visible: false
                 label: qsTr("Connections")
                 value: stra.connections.devConnected + "/" + stra.connections.devTot
             }

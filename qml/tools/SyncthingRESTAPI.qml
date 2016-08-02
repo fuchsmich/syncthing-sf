@@ -2,10 +2,11 @@ import QtQuick 2.0
 import QtQuick.XmlListModel 2.0
 
 Item {
-    id: root
+    id: stra
     readonly property string restVersion: '0.14'
     property string guiUrl: 'http://localhost:8384'
     property string apiKey: '' //: '0KtQMct7bdCeSI6nE08UE-AP2y-jxges'
+    property bool connected: false
     property string myId: ''
     property string appConfigPath: ''
 
@@ -16,7 +17,7 @@ Item {
         id: timer
         interval: 2000
         repeat: true
-        onTriggered: stop();
+        //        onTriggered: stop();
     }
 
 
@@ -26,21 +27,13 @@ Item {
         query: "/configuration/gui"
         XmlRole { name: "key"; query: "apikey/string()"}
         onStatusChanged: {
-//            console.log("apiKey", status, count, errorString(), apiKey, XmlListModel.Ready);
-            if ( status === XmlListModel.Ready && count >= 1 ) root.apiKey = get(0).key;
-//            console.log(apiKey);
+            //            console.log("apiKey", status, count, errorString(), apiKey, XmlListModel.Ready);
+            if ( status === XmlListModel.Ready && count >= 1 ) stra.apiKey = get(0).key;
+            console.log(apiKey);
         }
     }
 
     onApiKeyChanged: if (apiKey !== '') timer.start();
-    function refresh() {
-        console.log('refresh');
-        systemVersion.refresh();
-        config.refresh();
-        status.refresh();
-        requestGet(connections.source, connections.setJSON);
-    }
-
     
     function getName4ID(id) {
         var devices = config['devices']
@@ -50,73 +43,83 @@ Item {
         }
     }
     
-    function requestGet(source, cbf) {
-        if (source === '' || apiKey === '') return;
-        var xhr = new XMLHttpRequest;
-        xhr.open("GET", source);
-        xhr.onreadystatechange = function() {
-//            console.log("rg", xhr.readyState, xhr.status, xhr.statusText, xhr.responseText);
-            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-//                console.log("rg", xhr.responseText);
-                cbf(JSON.parse(xhr.responseText));
-            }
+    property RestEndpoint checkConnection: RestEndpoint {
+        apiKey: stra.apiKey
+        source: guiUrl + '/rest/system/ping'
+        onJsonChanged: {
+//            console.log("cc", JSON.stringify(json));
+            if (error === '' && json["ping"] === "pong") connected = true;
+            else connected = false;
         }
-        xhr.setRequestHeader('X-API-Key', apiKey);
-
-        xhr.send();
+        onErrorChanged: console.log("ccerror", error)
+        Connections {
+            target: timer
+            onTriggered: checkConnection.refresh();
+        }
     }
 
 
     property RestEndpoint systemVersion: RestEndpoint {
-        apiKey: root.apiKey
+        apiKey: stra.apiKey
         source: guiUrl + '/rest/system/version'
     }
 
     property RestEndpoint status: RestEndpoint {
-        apiKey: root.apiKey
+        apiKey: stra.apiKey
         source: guiUrl + '/rest/system/status'
         onJsonChanged: {
-            myId = json['myID'];
+            if (json['myID']) myId = json['myID'];
+            else myId = '';
             console.log(myId);
+        }
+        Connections {
+            target: stra
+            onConnectedChanged: if (stra.connected) parent.refresh();
         }
     }
 
     property RestEndpoint config: RestEndpoint {
-        apiKey: root.apiKey
+        apiKey: stra.apiKey
         source: guiUrl + '/rest/system/config'
         onJsonChanged: {
             folderModel.getFolders();
         }
+        Connections {
+            target: stra
+            onConnectedChanged: if (stra.connected) parent.refresh();
+        }
     }
 
     property RestEndpoint statsFolder: RestEndpoint {
-        apiKey: root.apiKey
+        apiKey: stra.apiKey
         source: guiUrl + '/rest/stats/folder'
     }
 
-//    property RestEndpoint dbCompletion: RestEndpoint {
-//        apiKey: root.apiKey
-//        source: guiUrl + '/rest/db/completion'
-//        parameters: {"folder": "SkAAF-Lfaow"}
-//        onJsonChanged: console.log(JSON.stringify(json))
-//    }
+    //    property RestEndpoint dbCompletion: RestEndpoint {
+    //        apiKey: stra.apiKey
+    //        source: guiUrl + '/rest/db/completion'
+    //        parameters: {"folder": "SkAAF-Lfaow"}
+    //        onJsonChanged: console.log(JSON.stringify(json))
+    //    }
 
 
     property ListModel folderModel: ListModel {
         function getFolders() {
-            var folders = config.json['folders'];
-            root.folderModel.clear();
-            for (var i in folders) {
-                var folder = folders[i];
-                var name = (folder['label'] === '' ? folder['id'] : folder['label']);
-                root.folderModel.append({"name" : name, "folderId": folder['id'], "path" : "file://" + folder['path']});
-            }
+            if (config.json['folders']) {
+                var folders = config.json['folders'];
+                stra.folderModel.clear();
+                for (var i in folders) {
+                    var folder = folders[i];
+                    var name = (folder['label'] === '' ? folder['id'] : folder['label']);
+                    stra.folderModel.append({"name" : name, "folderId": folder['id'], "path" : "file://" + folder['path']});
+                }
+            } else clear();
         }
     }
 
 
     property RestEndpoint connections: RestEndpoint {
-        apiKey: root.apiKey
+        apiKey: stra.apiKey
         source: guiUrl + '/rest/system/connections'
         property int devTot: 0 //(count > 0 ? count - 1 : count) //numb. of remote devices
         property int devConnected: 0 //numb. of remote devices connected to
@@ -125,22 +128,32 @@ Item {
         property real outBytesTotal: 0 //bytes sent
         property real outBytesTotalRate: 0 //b/s sent
         onJsonChanged: {
-            var ibt = json['total']['inBytesTotal']
-            if (typeof inBytesTotal !== 'undefined') {
-                inBytesTotalRate = (ibt-inBytesTotal)/(timer.interval/1000);
-            }
-            inBytesTotal = ibt;
+            //TODO Werte zurücksetzen, wenn json nicht geladen
+            if (json['total']) {
+                var ibt = json['total']['inBytesTotal']
+                if (typeof inBytesTotal !== 'undefined') {
+                    inBytesTotalRate = (ibt-inBytesTotal)/(timer.interval/1000);
+                }
+                inBytesTotal = ibt;
 
-            var obt = json['total']['outBytesTotal']
-            if (typeof outBytesTotal !== 'undefined') {
-                outBytesTotalRate = (obt-outBytesTotal)/(timer.interval/1000);
-            }
-            outBytesTotal = obt;
-            devConnected = 0;
-            devTot = -1;
-            for (var i in json['connections']) {
-                devTot++;
-                if (json['connections'][i]['connected'] === true) devConnected++;
+                var obt = json['total']['outBytesTotal']
+                if (typeof outBytesTotal !== 'undefined') {
+                    outBytesTotalRate = (obt-outBytesTotal)/(timer.interval/1000);
+                }
+                outBytesTotal = obt;
+                devConnected = 0;
+                devTot = -1;
+                for (var i in json['connections']) {
+                    devTot++;
+                    if (json['connections'][i]['connected'] === true) devConnected++;
+                }
+            } else {
+                devTot = 0
+                devConnected = 0
+                inBytesTotal = 0
+                inBytesTotalRate = 0
+                outBytesTotal = 0
+                outBytesTotalRate = 0
             }
         }
 
@@ -152,6 +165,10 @@ Item {
             for (var i in units)
                 if (bytes > i) return Number(bytes/i).toLocaleString(Qt.locale(), 'f') + " " + units[i];
             return Number(bytes).toLocaleString(Qt.locale(), 'f') + " b";
+        }
+        Connections {
+            target: timer
+            onTriggered: connections.refresh();
         }
     }
 }

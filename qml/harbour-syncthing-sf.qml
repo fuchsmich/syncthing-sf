@@ -32,7 +32,7 @@ import Sailfish.Silica 1.0
 import "pages"
 
 import org.nemomobile.dbus 2.0
-import SyncConnector 1.0
+//import SyncConnector 1.0
 
 import "tools"
 

@@ -20,11 +20,20 @@ Page {
             label: "ID"
             value: stra.myId
         }
-        QRCode {
-            anchors.centerIn: parent
-            width: 320
-            height: 320
-            value: stra.myId
+        Rectangle {
+            anchors.horizontalCenter: parent.horizontalCenter
+            visible: stra.myId !== ''
+            color: "white"
+            width: 400
+            height: 400
+
+            QRCode {
+                anchors.centerIn: parent
+                width: 320
+                height: 320
+                value: stra.myId
+            }
         }
+
     }
 }

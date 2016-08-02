@@ -5,7 +5,8 @@ Item {
     property string source: ''
     property string apiKey: '' //parent.apiKey
     property var parameters: []
-    property var json//: JSON.parse('')
+    property var json: '' //: JSON.parse('')
+    property string error: ''
 
     function refresh() {
         var parmString = '';
@@ -15,27 +16,30 @@ Item {
             parmString += name + "=" + parameters[name];
         }
         var source = re.source + parmString;
-//        console.log(source);
 
         if (source === '' || apiKey === '') return;
+        console.log(source, apiKey);
         var xhr = new XMLHttpRequest;
         xhr.open("GET", source);
         xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-                //                 console.log("rg", xhr.responseText);
-                json = JSON.parse(xhr.responseText);
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    //                 console.log("rg", xhr.responseText);
+                    error = '';
+                    json = JSON.parse(xhr.responseText);
+                } else {
+                    error = xhr.statusText;
+                    json = '';
+                }
             }
         }
         xhr.setRequestHeader('X-API-Key', apiKey);
 
         xhr.send();
     }
-    Connections {
-        target: timer
-        onTriggered: refresh();
-    }
 
-    onParametersChanged: refresh();
-    onSourceChanged: refresh();
+        onParametersChanged: refresh();
+        onSourceChanged: refresh();
+        onApiKeyChanged: refresh();
 }
 

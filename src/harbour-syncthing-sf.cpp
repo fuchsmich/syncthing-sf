@@ -26,7 +26,7 @@
 #include <QStandardPaths>
 #include <QQmlContext>
 
-#include "syncconnectorplugin.h"
+//#include "syncconnectorplugin.h"
 
 //#include <QApplication>
 
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 {
 //    Q_INIT_RESOURCE(qsyncthing);
 
-    qmlRegisterType<QQuickSyncConnector>("SyncConnector", 1, 0, "SyncConnector");
+    //qmlRegisterType<QQuickSyncConnector>("SyncConnector", 1, 0, "SyncConnector");
 
     QGuiApplication *app = SailfishApp::application(argc, argv);
     QQuickView *view = SailfishApp::createView();
