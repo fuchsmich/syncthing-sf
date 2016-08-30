@@ -30,6 +30,8 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import org.nemomobile.dbus 2.0
+import org.nemomobile.configuration 1.0
+
 
 import "pages"
 import "tools"
@@ -38,9 +40,8 @@ ApplicationWindow
 {
     id: app
 
-
     SyncthingRESTAPI {
-        id: stra
+        id: rest
         appConfigPath: genericConfigPath
         Component.onCompleted: console.log("stdpath", StandardPaths.genericData);
     }
@@ -51,9 +52,11 @@ ApplicationWindow
             syncthingService.toggleServiceDueToState(settings.startStopWithAC, ac.online);
     }
 
-    Item {
-        //TODO Settings implementieren
+    ConfigurationGroup {
+        //TODO wie ladet man Werte??
+        //https://sailfishos.org/develop/docs/nemo-qml-plugin-configuration/
         id: settings
+        path: '/info/fuxl/syncthing-controller'
         property bool startStopWithAC: false
         property bool startStopWithWifi: false
         property bool startStopWithApp: false
@@ -154,7 +157,7 @@ ApplicationWindow
         Component.onCompleted: getProperties();
     }
 
-    initialPage: Component { FirstPage { id: fp } }
+    initialPage: Component { FirstPage {} }
 
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
 

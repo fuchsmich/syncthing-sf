@@ -4,23 +4,20 @@ import QtQuick 2.0
 import QtQuick.XmlListModel 2.0
 
 Item {
-    id: stra
+    id: root
     readonly property string restVersion: '0.14'
     property string guiUrl: 'http://localhost:8384'
     property string apiKey: ''
     property bool connected: false
     property string myId: ''
     property string appConfigPath: ''
-
+    property Timer timer: Timer {
+        interval: 2000
+        repeat: true
+    }
 
     signal refreshEndpoints();
 
-    Timer {
-        id: timer
-        interval: 2000
-        repeat: true
-        //        onTriggered: stop();
-    }
 
 
     XmlListModel {
@@ -30,7 +27,7 @@ Item {
         XmlRole { name: "key"; query: "apikey/string()"}
         onStatusChanged: {
             //            console.log("apiKey", status, count, errorString(), apiKey, XmlListModel.Ready);
-            if ( status === XmlListModel.Ready && count >= 1 ) stra.apiKey = get(0).key;
+            if ( status === XmlListModel.Ready && count >= 1 ) root.apiKey = get(0).key;
             console.log(apiKey);
         }
     }
@@ -51,7 +48,7 @@ Item {
     }
     
     property RestEndpoint checkConnection: RestEndpoint {
-        apiKey: stra.apiKey
+        apiKey: root.apiKey
         source: guiUrl + '/rest/system/ping'
         onJsonChanged: {
 //            console.log("cc", JSON.stringify(json));
@@ -67,12 +64,12 @@ Item {
 
 
     property RestEndpoint version: RestEndpoint {
-        apiKey: stra.apiKey
+        apiKey: root.apiKey
         source: guiUrl + '/rest/system/version'
     }
 
     property RestEndpoint status: RestEndpoint {
-        apiKey: stra.apiKey
+        apiKey: root.apiKey
         source: guiUrl + '/rest/system/status'
         onJsonChanged: {
             if (json['myID']) myId = json['myID'];
@@ -81,29 +78,29 @@ Item {
         }
         Connections {
             target: timer
-            onTriggered:  if (stra.connected) status.refresh();
+            onTriggered:  if (root.connected) status.refresh();
         }
     }
 
     property RestEndpoint config: RestEndpoint {
-        apiKey: stra.apiKey
+        apiKey: root.apiKey
         source: guiUrl + '/rest/system/config'
         onJsonChanged: {
             folderModel.getFolders();
         }
         Connections {
-            target: stra
-            onConnectedChanged: if (stra.connected) config.refresh();
+            target: root
+            onConnectedChanged: if (root.connected) config.refresh();
         }
     }
 
     property RestEndpoint statsFolder: RestEndpoint {
-        apiKey: stra.apiKey
+        apiKey: root.apiKey
         source: guiUrl + '/rest/stats/folder'
     }
 
     //    property RestEndpoint dbCompletion: RestEndpoint {
-    //        apiKey: stra.apiKey
+    //        apiKey: root.apiKey
     //        source: guiUrl + '/rest/db/completion'
     //        parameters: {"folder": "SkAAF-Lfaow"}
     //        onJsonChanged: console.log(JSON.stringify(json))
@@ -114,11 +111,11 @@ Item {
         function getFolders() {
             if (config.json['folders']) {
                 var folders = config.json['folders'];
-                stra.folderModel.clear();
+                root.folderModel.clear();
                 for (var i in folders) {
                     var folder = folders[i];
                     var name = (folder['label'] === '' ? folder['id'] : folder['label']);
-                    stra.folderModel.append({"name" : name, "folderId": folder['id'], "path" : "file://" + folder['path']});
+                    root.folderModel.append({"name" : name, "folderId": folder['id'], "path" : "file://" + folder['path']});
                 }
             } else clear();
         }
@@ -126,7 +123,7 @@ Item {
 
 
     property RestEndpoint connections: RestEndpoint {
-        apiKey: stra.apiKey
+        apiKey: root.apiKey
         source: guiUrl + '/rest/system/connections'
         property int devTot: 0 //(count > 0 ? count - 1 : count) //numb. of remote devices
         property int devConnected: 0 //numb. of remote devices connected to

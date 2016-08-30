@@ -18,11 +18,11 @@ Page {
         DetailItem{
             width: parent.width
             label: "ID"
-            value: stra.myId
+            value: rest.myId
         }
         Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
-            visible: stra.myId !== ''
+            visible: rest.myId !== ''
             color: "white"
             width: 400
             height: 400
@@ -31,7 +31,7 @@ Page {
                 anchors.centerIn: parent
                 width: 320
                 height: 320
-                value: stra.myId
+                value: rest.myId
             }
         }
 

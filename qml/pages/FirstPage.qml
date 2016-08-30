@@ -7,7 +7,7 @@ import '../items' as MyItems
 
 Page {
     id: page
-    //    property string sTstatus: stra.status
+    //    property string sTstatus: rest.status
     property string selectedFolder
 
     SilicaFlickable {
@@ -26,12 +26,12 @@ Page {
             MenuItem {
                 text: qsTr("Show ID")
                 onClicked: pageStack.push(Qt.resolvedUrl("MyID.qml"));
-                enabled: stra.connected
+                enabled: rest.connected
             }
             MenuItem {
                 text: qsTr("SyncThing Web UI")
-                onClicked: Qt.openUrlExternally(stra.guiUrl)
-                enabled: stra.connected
+                onClicked: Qt.openUrlExternally(rest.guiUrl)
+                enabled: rest.connected
             }
         }
 
@@ -81,18 +81,18 @@ Page {
             DetailItem {
 //                visible: false
                 label: qsTr("Status")
-                value: (stra.connected ? qsTr('connected') : qsTr('not connected'))
+                value: (rest.connected ? qsTr('connected') : qsTr('not connected'))
             }
             DetailItem {
 //                visible: false
-                enabled: stra.connected
+                enabled: rest.connected
                 label: qsTr("Client Version")
-                value: (stra.connected ? stra.systemVersion.json['version']:'')
+                value: (rest.connected ? rest.systemVersion.json['version']:'')
             }
             DetailItem {
 //                visible: false
                 label: qsTr("Connections")
-                value: stra.connections.devConnected + "/" + stra.connections.devTot
+                value: rest.connections.devConnected + "/" + rest.connections.devTot
             }
             Row {
                 //                x: Theme.paddingLarge
@@ -103,15 +103,15 @@ Page {
                     id: dti
                     width: parent.width/2
                     label: "In"
-                    value: stra.connections.formatBytes(stra.connections.inBytesTotalRate)
-                           + "/s (" + stra.connections.formatBytes(stra.connections.inBytesTotal) + ")"
+                    value: rest.connections.formatBytes(rest.connections.inBytesTotalRate)
+                           + "/s (" + rest.connections.formatBytes(rest.connections.inBytesTotal) + ")"
                     fontPixelSize: Theme.fontSizeTiny
                 }
                 MyItems.DetailItem {
                     width: parent.width/2
                     label: "Out"
-                    value: stra.connections.formatBytes(stra.connections.outBytesTotalRate)
-                           + "/s (" + stra.connections.formatBytes(stra.connections.outBytesTotal) + ")"
+                    value: rest.connections.formatBytes(rest.connections.outBytesTotalRate)
+                           + "/s (" + rest.connections.formatBytes(rest.connections.outBytesTotal) + ")"
                     fontPixelSize: Theme.fontSizeTiny
                 }
             }
@@ -123,7 +123,7 @@ Page {
                 width: parent.width
 //                height: Theme.itemSizeLarge*(count +3)
                 itemHeight: Theme.itemSizeMedium
-                model: stra.folderModel
+                model: rest.folderModel
                 delegate:
                     ListItem {
                     contentHeight: Theme.itemSizeMedium
@@ -143,7 +143,7 @@ Page {
 
 //                        MenuItem {
 //                            text: "Last File"
-//                            //                            value: stra.statsFolder.json[folderId]['lastFile']['filename']
+//                            //                            value: rest.statsFolder.json[folderId]['lastFile']['filename']
 //                            font.pixelSize: Theme.fontSizeTiny
 //                        }
 //                        MenuItem {

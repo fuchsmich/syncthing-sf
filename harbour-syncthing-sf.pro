@@ -18,7 +18,7 @@ SOURCES       =   src/harbour-syncthing-sf.cpp
 #SOURCES += qst/syncconnector.cpp
 
 #QT += widgets
-QT += network
+#QT += network
 
 DISTFILES += \
     qml/pages/FirstPage.qml \
@@ -37,9 +37,9 @@ DISTFILES += \
     qml/items/FolderDelegate.qml \
     qml/pages/FolderInfoDelegate.qml \
     qml/pages/MyID.qml \
-    qml/qqr/qqr.js \
-    qml/qqr/qmldir \
     qml/qqr/QRCode.qml
+#    qml/qqr/qqr.js \
+#    qml/qqr/qmldir \
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 256x256
 
