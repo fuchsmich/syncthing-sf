@@ -33,11 +33,11 @@ Item {
     }
 
     onApiKeyChanged: if (apiKey !== '') timer.start();
-    onConnectedChanged: {
-        if (connected) {
+//    onConnectedChanged: {
+//        if (connected) {
 
-        }
-    }
+//        }
+//    }
     
     function getName4ID(id) {
         var devices = config['devices']
@@ -52,8 +52,8 @@ Item {
         source: guiUrl + '/rest/system/ping'
         onJsonChanged: {
 //            console.log("cc", JSON.stringify(json));
-            if (json["ping"] === "pong" && !connected) connected = true;
-            else if (connected) connected = false;
+            if (json["ping"] === "pong") connected = true;
+            else connected = false;
         }
         onErrorChanged: console.log("ccerror", error)
         Connections {
@@ -63,7 +63,7 @@ Item {
     }
 
 
-    property RestEndpoint version: RestEndpoint {
+    property RestEndpoint systemVersion: RestEndpoint {
         apiKey: root.apiKey
         source: guiUrl + '/rest/system/version'
     }

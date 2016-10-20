@@ -48,11 +48,11 @@ INSTALLS += cover-icon
   cover-icon.files = harbour-syncthing-sf.png
 
 
-INSTALLS += service
-  service.path = /usr/lib/systemd/user
-  service.files = syncthing.net/etc/linux-systemd/user/syncthing.service
+#INSTALLS += service
+#  service.path = /usr/lib/systemd/user
+#  service.files = syncthing.net/etc/linux-systemd/user/syncthing.service
 
-INSTALLS += syncthing
-  syncthing.path = /usr/share/harbour-syncthing-sf/libexec
-  syncthing.files = syncthing.net/386/syncthing  #emulator/tablet
+#INSTALLS += syncthing
+#  syncthing.path = /usr/share/harbour-syncthing-sf/libexec
+#  syncthing.files = syncthing.net/386/syncthing  #emulator/tablet
 #  syncthing.files = syncthing.net/arm/syncthing  #jolla

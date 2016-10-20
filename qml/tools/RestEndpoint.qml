@@ -5,7 +5,7 @@ Item {
     property string source: ''
     property string apiKey: '' //parent.apiKey
     property var parameters: []
-    property var json: '' //: JSON.parse('')
+    property var json //: '' //: JSON.parse('')
     property string error: ''
 
     function refresh() {

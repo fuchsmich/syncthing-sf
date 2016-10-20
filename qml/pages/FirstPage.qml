@@ -55,42 +55,48 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
                 onClicked: syncthingService.toggle()
             }
-            TextSwitch {
-                visible: false
-                enabled: false
-                x: Theme.paddingLarge
-                text: "start/stop service with Wifi connection"
-                description: "Wifi state: " + (connmanWifi.wifiConnected ? "connected" : "not connected")
-                checked: settings.startStopWithWifi
-                onCheckedChanged: settings.startStopWithWifi = checked
+            SectionHeader {
+                text: qsTr("Bind Service Activity To...")
             }
-            TextSwitch {
-                visible: false
-                enabled: false
-                x: Theme.paddingLarge
-                text: "start/stop service with AC connection"
-                description: "AC state: " + (ac.online ? "connected" : "not connected")
-                checked: settings.startStopWithAC
-                onCheckedChanged: settings.startStopWithAC = checked
+            Row {
+                    x: Theme.paddingLarge
+                Switch {
+//                    visible: false
+//                    enabled: false
+//                    text: "start/stop service with Wifi connection"
+//                    description: "Wifi state: " + (connmanWifi.wifiConnected ? "connected" : "not connected")
+                    icon.source: (connmanWifi.wifiConnected ? "image://theme/icon-m-wlan-4": "image://theme/icon-m-wlan")
+                    checked: settings.startStopWithWifi
+                    onCheckedChanged: settings.startStopWithWifi = checked
+                }
+                Switch {
+//                    visible: false
+//                    enabled: false
+//                    x: Theme.paddingLarge
+//                    text: "start/stop service with AC connection"
+//                    description: "AC state: " + (ac.online ? "connected" : "not connected")
+                    icon.source: "image://theme/icon-m-charging"
+                    checked: settings.startStopWithAC
+                    onCheckedChanged: settings.startStopWithAC = checked
+                }
             }
-
 
             SectionHeader {
                 text: qsTr("Service - State")
             }
             DetailItem {
-//                visible: false
+                //                visible: false
                 label: qsTr("Status")
                 value: (rest.connected ? qsTr('connected') : qsTr('not connected'))
             }
             DetailItem {
-//                visible: false
+                //                visible: false
                 enabled: rest.connected
                 label: qsTr("Client Version")
                 value: (rest.connected ? rest.systemVersion.json['version']:'')
             }
             DetailItem {
-//                visible: false
+                //                visible: false
                 label: qsTr("Connections")
                 value: rest.connections.devConnected + "/" + rest.connections.devTot
             }
@@ -103,6 +109,7 @@ Page {
                     id: dti
                     width: parent.width/2
                     label: "In"
+                    //TODO: formatBytes in eigene JS
                     value: rest.connections.formatBytes(rest.connections.inBytesTotalRate)
                            + "/s (" + rest.connections.formatBytes(rest.connections.inBytesTotal) + ")"
                     fontPixelSize: Theme.fontSizeTiny
@@ -121,7 +128,7 @@ Page {
 
             ColumnView {
                 width: parent.width
-//                height: Theme.itemSizeLarge*(count +3)
+                //                height: Theme.itemSizeLarge*(count +3)
                 itemHeight: Theme.itemSizeMedium
                 model: rest.folderModel
                 delegate:
@@ -131,26 +138,26 @@ Page {
                         x: Theme.paddingLarge
                         text: ( model.name === '' ? model.folderId : model.name)
                     }
-//                    Label {
-//                        x: Theme.paddingLarge
-//                        text: model.folderId
-//                        font.pixelSize: Theme.fontSizeTiny
-//                    }
+                    //                    Label {
+                    //                        x: Theme.paddingLarge
+                    //                        text: model.folderId
+                    //                        font.pixelSize: Theme.fontSizeTiny
+                    //                    }
                     menu: ContextMenu {
                         MenuItem {
                             text: "Browse Folder"
                         }
 
-//                        MenuItem {
-//                            text: "Last File"
-//                            //                            value: rest.statsFolder.json[folderId]['lastFile']['filename']
-//                            font.pixelSize: Theme.fontSizeTiny
-//                        }
-//                        MenuItem {
-//                            text: "Completed"
-//                            //                            value: "XX %"
-//                            //                            fontPixelSize: Theme.fontSizeTiny
-//                        }
+                        //                        MenuItem {
+                        //                            text: "Last File"
+                        //                            //                            value: rest.statsFolder.json[folderId]['lastFile']['filename']
+                        //                            font.pixelSize: Theme.fontSizeTiny
+                        //                        }
+                        //                        MenuItem {
+                        //                            text: "Completed"
+                        //                            //                            value: "XX %"
+                        //                            //                            fontPixelSize: Theme.fontSizeTiny
+                        //                        }
                     }
                 }
                 //                contentHeight: Theme.itemSizeMedium

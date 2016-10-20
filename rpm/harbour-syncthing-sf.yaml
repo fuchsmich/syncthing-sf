@@ -33,7 +33,7 @@ PkgConfigBR:
 # Runtime dependencies which are not automatically detected
 Requires:
   - sailfishsilica-qt5 >= 0.10.9
-#  - syncthing >= 0.12 #TODO muss noch erstellt werden
+  - syncthing >= 0.14
 
 # All installed files
 Files:
@@ -43,7 +43,7 @@ Files:
   - '%{_datadir}/icons/hicolor/*/apps/%{name}.png'
 #  - '%{_datadir}/%{name}/%{name}.png'
 #  - '%{_datadir}/%{name}/libexec/syncthing'
-  - '%{_libdir}/systemd/user/syncthing.service'
+#  - '%{_libdir}/systemd/user/syncthing.service'
 
 # For more information about yaml and what's supported in Sailfish OS
 # build system, please see https://wiki.merproject.org/wiki/Spectacle
